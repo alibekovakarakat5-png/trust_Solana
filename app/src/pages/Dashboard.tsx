@@ -1,8 +1,16 @@
-import { Shield, Home, FileText, AlertTriangle, TrendingUp, CheckCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Shield, Home, FileText, AlertTriangle, TrendingUp, CheckCircle, ExternalLink, Loader2, Wifi, WifiOff } from 'lucide-react';
 import { useStore } from '../store/useStore';
+import { useTrustEstate } from '../hooks/useTrustEstate';
+import { useWallet } from '@solana/wallet-adapter-react';
+import TransactionHistory from '../components/TransactionHistory';
 import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
 
-function StatCard({ icon: Icon, label, value, color }: { icon: any; label: string; value: number; color: string }) {
+const PROGRAM_ID = '8j9MKKmvkYeZw9SUtt7KucShygxcjZHMYpnGoJFUY1MY';
+
+function StatCard({ icon: Icon, label, value, color, onChain }: { icon: any; label: string; value: number; color: string; onChain?: boolean }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -13,7 +21,12 @@ function StatCard({ icon: Icon, label, value, color }: { icon: any; label: strin
         <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${color}`}>
           <Icon className="w-5 h-5" />
         </div>
-        <span className="text-gray-400 text-sm">{label}</span>
+        <div className="flex items-center gap-2">
+          <span className="text-gray-400 text-sm">{label}</span>
+          {onChain && (
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-green-500/10 text-green-400 border border-green-500/20">on-chain</span>
+          )}
+        </div>
       </div>
       <p className="text-3xl font-bold">{value}</p>
     </motion.div>
@@ -21,11 +34,70 @@ function StatCard({ icon: Icon, label, value, color }: { icon: any; label: strin
 }
 
 export default function Dashboard() {
+  const { t } = useTranslation();
   const { stats, properties, deals } = useStore();
+  const { publicKey } = useWallet();
+  const { initializePlatform, fetchPlatformState, loading, programId } = useTrustEstate();
+
+  const [onChainStats, setOnChainStats] = useState<{
+    authority: string;
+    totalProperties: number;
+    totalDeals: number;
+    totalFraudBlocked: number;
+  } | null>(null);
+  const [platformInitialized, setPlatformInitialized] = useState<boolean | null>(null);
+  const [initializing, setInitializing] = useState(false);
 
   const verifiedCount = properties.filter(p => p.isVerified).length;
-  const activeDeals = deals.filter(d => !['completed', 'cancelled'].includes(d.status)).length;
-  const blockedDeals = deals.filter(d => d.status === 'blocked').length;
+
+  // Fetch on-chain platform state
+  useEffect(() => {
+    if (!publicKey) return;
+    fetchPlatformState().then((state) => {
+      if (state) {
+        setOnChainStats(state);
+        setPlatformInitialized(true);
+      } else {
+        setPlatformInitialized(false);
+      }
+    });
+  }, [publicKey, fetchPlatformState]);
+
+  async function handleInitPlatform() {
+    setInitializing(true);
+    try {
+      const sig = await initializePlatform();
+      toast.success(
+        <div>
+          <p className="font-semibold">Platform initialized!</p>
+          <a
+            href={`https://explorer.solana.com/tx/${sig}?cluster=devnet`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-primary-400 underline"
+          >
+            View on Solana Explorer
+          </a>
+        </div>,
+        { duration: 8000 }
+      );
+      setPlatformInitialized(true);
+      const state = await fetchPlatformState();
+      if (state) setOnChainStats(state);
+    } catch (err: any) {
+      const msg = err?.message || 'Failed';
+      if (msg.includes('already in use')) {
+        toast.error('Platform already initialized on this network');
+        setPlatformInitialized(true);
+        const state = await fetchPlatformState();
+        if (state) setOnChainStats(state);
+      } else {
+        toast.error(`Error: ${msg.slice(0, 100)}`);
+      }
+    } finally {
+      setInitializing(false);
+    }
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -42,30 +114,83 @@ export default function Dashboard() {
             </div>
             <div>
               <h1 className="text-3xl font-bold">TrustEstate</h1>
-              <p className="text-primary-300/80 text-sm">Secure Real Estate on Solana</p>
+              <p className="text-primary-300/80 text-sm">{t('dashboard.subtitle')}</p>
             </div>
           </div>
-          <p className="text-gray-300 max-w-2xl mt-3">
-            Tokenized real estate with AI-powered fraud detection. Every property is an NFT,
-            every deal goes through AI verification and escrow smart contract.
-            Fraud becomes structurally impossible.
-          </p>
-          <div className="flex gap-3 mt-5">
-            <span className="text-xs px-3 py-1 rounded-full bg-green-500/10 text-green-400 border border-green-500/20">Solana Devnet</span>
+          <div className="flex flex-wrap gap-3 mt-5">
+            <span className="text-xs px-3 py-1 rounded-full bg-green-500/10 text-green-400 border border-green-500/20 flex items-center gap-1.5">
+              {platformInitialized ? <Wifi className="w-3 h-3" /> : <WifiOff className="w-3 h-3" />}
+              Solana Devnet
+            </span>
             <span className="text-xs px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">AI Fraud Detection</span>
-            <span className="text-xs px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20">Escrow Protected</span>
+            <a
+              href={`https://explorer.solana.com/address/${PROGRAM_ID}?cluster=devnet`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20 hover:bg-purple-500/20 transition-colors inline-flex items-center gap-1"
+            >
+              {PROGRAM_ID.slice(0, 8)}... <ExternalLink className="w-3 h-3" />
+            </a>
+            {platformInitialized === true && (
+              <span className="text-xs px-3 py-1 rounded-full bg-green-500/10 text-green-400 border border-green-500/20 flex items-center gap-1">
+                <CheckCircle className="w-3 h-3" /> Platform Active
+              </span>
+            )}
           </div>
+
+          {/* Initialize Platform Button */}
+          {publicKey && platformInitialized === false && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-5"
+            >
+              <button
+                onClick={handleInitPlatform}
+                disabled={initializing}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-500 disabled:opacity-50 text-white rounded-xl text-sm font-semibold transition-all hover:scale-105"
+              >
+                {initializing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Shield className="w-4 h-4" />}
+                {initializing ? t('dashboard.initializing') : t('dashboard.init_platform')}
+              </button>
+              <p className="text-xs text-gray-500 mt-2">{t('dashboard.init_desc')}</p>
+            </motion.div>
+          )}
         </div>
       </motion.div>
 
+      {/* Stats Grid — show on-chain data if available */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <StatCard icon={Home} label="Total Properties" value={stats.totalProperties} color="bg-primary-600/20 text-primary-400" />
-        <StatCard icon={FileText} label="Total Deals" value={stats.totalDeals} color="bg-blue-600/20 text-blue-400" />
-        <StatCard icon={AlertTriangle} label="Fraud Blocked" value={stats.totalFraudBlocked} color="bg-red-600/20 text-red-400" />
-        <StatCard icon={CheckCircle} label="Verified Properties" value={verifiedCount} color="bg-green-600/20 text-green-400" />
+        <StatCard
+          icon={Home}
+          label={t('dashboard.total_properties')}
+          value={onChainStats?.totalProperties ?? stats.totalProperties}
+          color="bg-primary-600/20 text-primary-400"
+          onChain={!!onChainStats}
+        />
+        <StatCard
+          icon={FileText}
+          label={t('dashboard.total_deals')}
+          value={onChainStats?.totalDeals ?? stats.totalDeals}
+          color="bg-blue-600/20 text-blue-400"
+          onChain={!!onChainStats}
+        />
+        <StatCard
+          icon={AlertTriangle}
+          label={t('dashboard.fraud_blocked')}
+          value={onChainStats?.totalFraudBlocked ?? stats.totalFraudBlocked}
+          color="bg-red-600/20 text-red-400"
+          onChain={!!onChainStats}
+        />
+        <StatCard
+          icon={CheckCircle}
+          label={t('dashboard.verified')}
+          value={verifiedCount}
+          color="bg-green-600/20 text-green-400"
+        />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -73,19 +198,18 @@ export default function Dashboard() {
         >
           <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <Shield className="w-5 h-5 text-primary-400" />
-            How It Works
+            {t('dashboard.how_it_works')}
           </h2>
           <div className="space-y-3">
             {[
-              { step: '1', text: 'Tokenize property — upload docs, AI verifies authenticity' },
-              { step: '2', text: 'AI checks for fraud — duplicates, price anomalies, fake docs' },
-              { step: '3', text: 'Buyer creates deal — funds go into escrow smart contract' },
-              { step: '4', text: 'AI analyzes deal — risk score determines: approve / review / block' },
-              { step: '5', text: 'Atomic swap — NFT to buyer, SOL to seller, all on-chain' },
-            ].map(({ step, text }) => (
-              <div key={step} className="flex items-start gap-3">
+              t('dashboard.step1'),
+              t('dashboard.step2'),
+              t('dashboard.step3'),
+              t('dashboard.step4'),
+            ].map((text, i) => (
+              <div key={i} className="flex items-start gap-3">
                 <span className="w-6 h-6 rounded-full bg-primary-600/20 text-primary-400 flex items-center justify-center text-xs font-bold shrink-0">
-                  {step}
+                  {i + 1}
                 </span>
                 <span className="text-gray-300 text-sm">{text}</span>
               </div>
@@ -100,10 +224,10 @@ export default function Dashboard() {
         >
           <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <TrendingUp className="w-5 h-5 text-green-400" />
-            Recent Activity
+            {t('dashboard.recent_activity')}
           </h2>
           {deals.length === 0 ? (
-            <p className="text-gray-500 text-sm">No deals yet. Create your first property!</p>
+            <p className="text-gray-500 text-sm">{t('deals.no_deals')}</p>
           ) : (
             <div className="space-y-2">
               {deals.slice(-5).reverse().map((deal) => (
@@ -117,7 +241,7 @@ export default function Dashboard() {
                     : deal.status === 'completed' ? 'bg-green-500/20 text-green-400'
                     : 'bg-yellow-500/20 text-yellow-400'
                   }`}>
-                    {deal.aiRiskScore > 0 ? `Risk: ${deal.aiRiskScore}` : deal.status}
+                    {deal.aiRiskScore > 0 ? `${t('deals.risk_score')}: ${deal.aiRiskScore}` : deal.status}
                   </span>
                 </div>
               ))}
@@ -125,6 +249,9 @@ export default function Dashboard() {
           )}
         </motion.div>
       </div>
+
+      {/* Solana Transaction History */}
+      <TransactionHistory />
     </div>
   );
 }

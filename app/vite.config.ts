@@ -8,7 +8,7 @@ export default defineConfig({
     nodePolyfills({ include: ['buffer', 'crypto', 'stream', 'util'] }),
   ],
   server: {
-    port: 5173,
+    port: 5175,
     proxy: {
       '/api': 'http://localhost:3001',
     },

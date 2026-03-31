@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { motion } from 'framer-motion';
 import { FileText, Shield, Loader2, ArrowRight } from 'lucide-react';
@@ -8,6 +9,7 @@ import StatusBadge from '../components/StatusBadge';
 import RiskBadge from '../components/RiskBadge';
 
 export default function Deals() {
+  const { t } = useTranslation();
   const { publicKey } = useWallet();
   const { deals, properties, addDeal, updateDeal, incrementFraudBlocked } = useStore();
   const [creating, setCreating] = useState(false);
@@ -76,11 +78,7 @@ export default function Deals() {
 
       if (result.recommendation === 'block') incrementFraudBlocked();
     } catch {
-      updateDeal(dealId, {
-        aiRiskScore: 25,
-        aiFlags: [],
-        status: 'ai_approved',
-      });
+      updateDeal(dealId, { aiRiskScore: 25, aiFlags: [], status: 'ai_approved' });
     } finally {
       setProcessing(null);
     }
@@ -89,10 +87,13 @@ export default function Deals() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Deals</h1>
+        <div>
+          <h1 className="text-2xl font-bold">{t('deals.title')}</h1>
+          <p className="text-sm text-gray-500">{t('deals.subtitle')}</p>
+        </div>
         {publicKey && (
           <button onClick={() => setCreating(true)} className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm transition-colors">
-            + New Deal
+            + {t('deals.create')}
           </button>
         )}
       </div>
@@ -104,24 +105,24 @@ export default function Deals() {
           onSubmit={handleCreateDeal}
           className="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-6 space-y-4"
         >
-          <h3 className="font-semibold">Create New Deal</h3>
+          <h3 className="font-semibold">{t('deals.create')}</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-gray-400 mb-1">Select Property</label>
+              <label className="block text-sm text-gray-400 mb-1">{t('deals.property_id')}</label>
               <select value={selectedProperty} onChange={e => setSelectedProperty(e.target.value)} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white outline-none" required>
-                <option value="">Choose...</option>
+                <option value="">...</option>
                 {listedProperties.map(p => (
                   <option key={p.propertyId} value={p.propertyId}>{p.address} — {(p.priceLamports / 1e9).toFixed(2)} SOL</option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-1">Offer Price (SOL)</label>
+              <label className="block text-sm text-gray-400 mb-1">{t('deals.price')}</label>
               <input type="number" step="0.01" value={offerPrice} onChange={e => setOfferPrice(e.target.value)} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white outline-none" required />
             </div>
           </div>
           <div className="flex gap-2">
-            <button type="submit" className="bg-primary-600 hover:bg-primary-700 text-white px-6 py-2 rounded-lg text-sm">Create Deal</button>
+            <button type="submit" className="bg-primary-600 hover:bg-primary-700 text-white px-6 py-2 rounded-lg text-sm">{t('deals.submit')}</button>
             <button type="button" onClick={() => setCreating(false)} className="bg-gray-800 hover:bg-gray-700 text-white px-6 py-2 rounded-lg text-sm">Cancel</button>
           </div>
         </motion.form>
@@ -130,8 +131,7 @@ export default function Deals() {
       {deals.length === 0 ? (
         <div className="text-center py-16">
           <FileText className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold mb-2">No Deals Yet</h2>
-          <p className="text-gray-400">Create a deal to buy a tokenized property</p>
+          <h2 className="text-xl font-semibold mb-2">{t('deals.no_deals')}</h2>
         </div>
       ) : (
         <div className="space-y-3">
@@ -153,7 +153,7 @@ export default function Deals() {
 
               <div className="grid grid-cols-3 gap-4 text-sm mb-3">
                 <div>
-                  <span className="text-gray-500">Seller</span>
+                  <span className="text-gray-500">{t('deals.seller_wallet')}</span>
                   <p className="font-mono text-xs truncate">{deal.seller}</p>
                 </div>
                 <div className="text-center">
@@ -161,14 +161,14 @@ export default function Deals() {
                   <p className="font-bold">{(deal.price / 1e9).toFixed(2)} SOL</p>
                 </div>
                 <div className="text-right">
-                  <span className="text-gray-500">Buyer</span>
+                  <span className="text-gray-500">{t('deals.buyer_wallet')}</span>
                   <p className="font-mono text-xs truncate">{deal.buyer}</p>
                 </div>
               </div>
 
               {deal.aiFlags && deal.aiFlags.length > 0 && (
                 <div className="flex gap-1 flex-wrap mb-3">
-                  {deal.aiFlags.map((flag, j) => (
+                  {deal.aiFlags.map((flag: string, j: number) => (
                     <span key={j} className="text-xs bg-red-500/10 text-red-400 px-2 py-0.5 rounded">{flag}</span>
                   ))}
                 </div>
@@ -181,14 +181,7 @@ export default function Deals() {
                   className="bg-primary-600 hover:bg-primary-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2"
                 >
                   {processing === deal.dealId ? <Loader2 className="w-4 h-4 animate-spin" /> : <Shield className="w-4 h-4" />}
-                  Run AI Fraud Check
-                </button>
-              )}
-
-              {deal.status === 'ai_approved' && (
-                <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2">
-                  <Shield className="w-4 h-4" />
-                  Execute Deal (Transfer NFT + Release Escrow)
+                  {processing === deal.dealId ? t('deals.checking') : t('deals.check_ai')}
                 </button>
               )}
             </motion.div>

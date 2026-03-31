@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import Landing from './pages/Landing';
 import Dashboard from './pages/Dashboard';
 import Properties from './pages/Properties';
 import Tokenize from './pages/Tokenize';
@@ -11,6 +12,8 @@ import { DEMO_PROPERTIES, DEMO_DEALS, DEMO_STATS } from './lib/demoData';
 
 export default function App() {
   const { properties, setProperties, setDeals, setStats } = useStore();
+  const { pathname } = useLocation();
+  const isLanding = pathname === '/';
 
   useEffect(() => {
     if (properties.length === 0) {
@@ -22,9 +25,10 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gray-950 text-white">
-      <Navbar />
+      {!isLanding && <Navbar />}
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={<Landing />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/properties" element={<Properties />} />
         <Route path="/tokenize" element={<Tokenize />} />
         <Route path="/deals" element={<Deals />} />

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Home, MapPin, Maximize, Shield } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import StatusBadge from '../components/StatusBadge';
@@ -6,17 +7,17 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
 export default function Properties() {
+  const { t } = useTranslation();
   const { properties } = useStore();
 
   if (properties.length === 0) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-16 text-center">
         <Home className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-        <h2 className="text-xl font-semibold mb-2">No Properties Yet</h2>
-        <p className="text-gray-400 mb-4">Tokenize your first property to get started</p>
+        <h2 className="text-xl font-semibold mb-2">{t('properties.no_properties')}</h2>
         <Link to="/tokenize" className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg transition-colors">
           <Shield className="w-5 h-5" />
-          Tokenize Property
+          {t('nav.tokenize')}
         </Link>
       </div>
     );
@@ -25,9 +26,12 @@ export default function Properties() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Properties</h1>
+        <div>
+          <h1 className="text-2xl font-bold">{t('properties.title')}</h1>
+          <p className="text-sm text-gray-500">{t('properties.subtitle')}</p>
+        </div>
         <Link to="/tokenize" className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm transition-colors">
-          + Tokenize New
+          + {t('nav.tokenize')}
         </Link>
       </div>
 
@@ -53,13 +57,18 @@ export default function Properties() {
                 <p className="text-sm">{prop.address}</p>
               </div>
               <div className="flex items-center gap-4 text-sm text-gray-400">
-                <span className="flex items-center gap-1"><Maximize className="w-3 h-3" />{prop.areaSqm}m²</span>
-                <span>{prop.rooms} rooms</span>
-                <span>Floor {prop.floor}/{prop.totalFloors}</span>
+                <span className="flex items-center gap-1"><Maximize className="w-3 h-3" />{prop.areaSqm} {t('properties.sqm')}</span>
+                <span>{prop.rooms} {t('properties.rooms')}</span>
+                <span>{t('properties.floor')} {prop.floor}/{prop.totalFloors}</span>
               </div>
               <div className="flex items-center justify-between pt-2 border-t border-gray-800">
                 <span className="text-lg font-bold">{(prop.priceLamports / 1e9).toFixed(2)} SOL</span>
-                {prop.aiScore > 0 && <RiskBadge score={100 - prop.aiScore} size="sm" />}
+                {prop.aiScore > 0 && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-500">{t('properties.ai_score')}</span>
+                    <RiskBadge score={100 - prop.aiScore} size="sm" />
+                  </div>
+                )}
               </div>
             </div>
           </motion.div>
