@@ -28,6 +28,7 @@ interface Deal {
   aiRiskScore: number;
   aiFlags: string[];
   createdAt: number;
+  onChainTx?: string;
 }
 
 interface PlatformStats {

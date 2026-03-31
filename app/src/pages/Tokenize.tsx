@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Upload, Shield, AlertTriangle, CheckCircle, Loader2, ExternalLink } from 'lucide-react';
 import { api } from '../lib/api';
 import { useStore } from '../store/useStore';
+import { useTxStore } from '../store/useTxStore';
 import { useTrustEstate } from '../hooks/useTrustEstate';
 import RiskBadge from '../components/RiskBadge';
 import toast from 'react-hot-toast';
@@ -14,6 +15,8 @@ export default function Tokenize() {
   const { publicKey } = useWallet();
   const { addProperty } = useStore();
   const { tokenizeProperty, loading: solanaLoading } = useTrustEstate();
+
+  const addTx = useTxStore((s) => s.addTx);
 
   const [form, setForm] = useState({
     address: '',
@@ -97,6 +100,23 @@ export default function Tokenize() {
         ...propertyData,
         sellerHistory: { totalPropertiesListed: 1, recentListings30Days: 1, previousFraudFlags: 0 },
       });
+
+      // Oracle recorded AI verdict on-chain
+      if (aiResult.onChainTx) {
+        addTx({
+          signature: aiResult.onChainTx,
+          type: 'ai_verification',
+          description: `AI verdict on-chain: score ${aiResult.verificationScore}/100`,
+          timestamp: Date.now(),
+        });
+        toast.success(
+          <div>
+            <p className="font-semibold">AI verdict recorded on-chain!</p>
+            <a href={`https://explorer.solana.com/tx/${aiResult.onChainTx}?cluster=devnet`} target="_blank" rel="noopener noreferrer" className="text-xs text-green-400 underline">View oracle transaction</a>
+          </div>,
+          { duration: 8000 }
+        );
+      }
 
       setResult({ ...aiResult, propertyId });
 

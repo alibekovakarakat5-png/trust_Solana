@@ -211,6 +211,47 @@ trust_solana_repo/
 
 ---
 
+## 🗺️ Roadmap — Scaling Potential
+
+TrustEstate is built as a foundation for Kazakhstan's national real estate infrastructure. Planned phases:
+
+### Phase 2 — Mainnet Launch (Q3 2026)
+- Deploy to Solana Mainnet after regulatory sandbox approval
+- Integration with **EGKN** (state cadastral database) via API
+- KYC/AML layer with digital ID verification (eGov Kazakhstan)
+- Mobile app (React Native) for property sellers and buyers
+
+### Phase 3 — Multi-City Expansion (Q4 2026)
+- Expand from Almaty to Astana, Shymkent, and Aktobe
+- **Notary module** — digital signing of property transfer acts
+- Court-admissible blockchain certificates for property ownership
+- Insurance module — escrow-backed deal insurance
+
+### Phase 4 — Central Asian Market (2027)
+| Country | Market Size | Entry Strategy |
+|---------|-------------|----------------|
+| 🇰🇿 Kazakhstan | $12B/year | First mover, regulatory partnership |
+| 🇺🇿 Uzbekistan | $8B/year | Mirror deployment, local AI model |
+| 🇰🇬 Kyrgyzstan | $2B/year | Partner-led rollout |
+
+### Revenue Model
+```
+Transaction fee:  0.5% of deal value  →  flows to Platform PDA treasury
+Verification fee: 5 SOL per property  →  oracle sustainability
+Fractional mgmt:  2% of rental income →  distributed to token holders
+```
+
+### Impact Projection
+| Year | Properties Tokenized | Fraud Prevented | Revenue |
+|------|---------------------|-----------------|---------|
+| 2026 | 500 | 12 cases | $25K |
+| 2027 | 5,000 | 120 cases | $250K |
+| 2028 | 50,000 | 1,200 cases | $2.5M |
+
+> *If just 10% of Kazakhstan's 120,000 annual real estate transactions run through TrustEstate by 2028, that's 14,400 families protected from fraud.*
+
+---
+
 <div align="center">
 
 **Built with ❤️ in Kazakhstan · Decentrathon 5.0 · April 2026**

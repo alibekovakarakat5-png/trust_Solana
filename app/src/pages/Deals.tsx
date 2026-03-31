@@ -2,16 +2,19 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { motion } from 'framer-motion';
-import { FileText, Shield, Loader2, ArrowRight } from 'lucide-react';
+import { FileText, Shield, Loader2, ArrowRight, ExternalLink } from 'lucide-react';
 import { api } from '../lib/api';
 import { useStore } from '../store/useStore';
+import { useTxStore } from '../store/useTxStore';
 import StatusBadge from '../components/StatusBadge';
 import RiskBadge from '../components/RiskBadge';
+import toast from 'react-hot-toast';
 
 export default function Deals() {
   const { t } = useTranslation();
   const { publicKey } = useWallet();
   const { deals, properties, addDeal, updateDeal, incrementFraudBlocked } = useStore();
+  const addTx = useTxStore((s) => s.addTx);
   const [creating, setCreating] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState('');
   const [offerPrice, setOfferPrice] = useState('');
@@ -68,13 +71,32 @@ export default function Deals() {
         isRepeatBuyer: false,
       });
 
+      const newStatus = result.recommendation === 'approve' ? 'ai_approved'
+        : result.recommendation === 'block' ? 'blocked'
+        : 'under_review';
+
       updateDeal(dealId, {
         aiRiskScore: result.riskScore,
         aiFlags: result.flags,
-        status: result.recommendation === 'approve' ? 'ai_approved'
-          : result.recommendation === 'block' ? 'blocked'
-          : 'under_review',
+        status: newStatus,
+        onChainTx: result.onChainTx || undefined,
       });
+
+      if (result.onChainTx) {
+        addTx({
+          signature: result.onChainTx,
+          type: 'deal_ai_check',
+          description: `Deal AI check on-chain: risk ${result.riskScore}/100 — ${result.recommendation}`,
+          timestamp: Date.now(),
+        });
+        toast.success(
+          <div>
+            <p className="font-semibold">Deal AI verdict recorded on-chain!</p>
+            <a href={`https://explorer.solana.com/tx/${result.onChainTx}?cluster=devnet`} target="_blank" rel="noopener noreferrer" className="text-xs text-green-400 underline">View oracle transaction</a>
+          </div>,
+          { duration: 8000 }
+        );
+      }
 
       if (result.recommendation === 'block') incrementFraudBlocked();
     } catch {
@@ -171,6 +193,21 @@ export default function Deals() {
                   {deal.aiFlags.map((flag: string, j: number) => (
                     <span key={j} className="text-xs bg-red-500/10 text-red-400 px-2 py-0.5 rounded">{flag}</span>
                   ))}
+                </div>
+              )}
+
+              {deal.onChainTx && (
+                <div className="mb-3 flex items-center gap-2 text-xs text-green-400">
+                  <span className="w-2 h-2 rounded-full bg-green-400 inline-block" />
+                  <span>AI verdict on-chain:</span>
+                  <a
+                    href={`https://explorer.solana.com/tx/${deal.onChainTx}?cluster=devnet`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-mono hover:text-green-300 flex items-center gap-1"
+                  >
+                    {deal.onChainTx.slice(0, 16)}... <ExternalLink className="w-3 h-3" />
+                  </a>
                 </div>
               )}
 
