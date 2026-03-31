@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Mint, Token, TokenAccount, MintTo, Transfer};
 use anchor_spl::associated_token::AssociatedToken;
 
-declare_id!("trustEst1111111111111111111111111111111");
+declare_id!("8j9MKKmvkYeZw9SUtt7KucShygxcjZHMYpnGoJFUY1MY");
 
 #[program]
 pub mod trustestate {
@@ -388,13 +388,13 @@ pub struct InitializePlatform<'info> {
 #[instruction(property_id: String)]
 pub struct TokenizeProperty<'info> {
     #[account(init, payer = owner, space = 8 + Property::INIT_SPACE, seeds = [b"property", property_id.as_bytes()], bump)]
-    pub property: Account<'info, Property>,
+    pub property: Box<Account<'info, Property>>,
     #[account(mut, seeds = [b"platform"], bump)]
-    pub platform: Account<'info, Platform>,
+    pub platform: Box<Account<'info, Platform>>,
     #[account(init, payer = owner, mint::decimals = 0, mint::authority = owner)]
-    pub property_mint: Account<'info, Mint>,
+    pub property_mint: Box<Account<'info, Mint>>,
     #[account(init, payer = owner, associated_token::mint = property_mint, associated_token::authority = owner)]
-    pub owner_token_account: Account<'info, TokenAccount>,
+    pub owner_token_account: Box<Account<'info, TokenAccount>>,
     #[account(mut)]
     pub owner: Signer<'info>,
     pub token_program: Program<'info, Token>,
@@ -507,13 +507,13 @@ pub struct CancelDeal<'info> {
 #[derive(Accounts)]
 pub struct FractionalizeProperty<'info> {
     #[account(mut)]
-    pub property: Account<'info, Property>,
+    pub property: Box<Account<'info, Property>>,
     #[account(init, payer = owner, space = 8 + FractionalProperty::INIT_SPACE, seeds = [b"fractional", property.key().as_ref()], bump)]
-    pub fractional: Account<'info, FractionalProperty>,
+    pub fractional: Box<Account<'info, FractionalProperty>>,
     #[account(init, payer = owner, mint::decimals = 0, mint::authority = owner)]
-    pub share_mint: Account<'info, Mint>,
+    pub share_mint: Box<Account<'info, Mint>>,
     #[account(init, payer = owner, associated_token::mint = share_mint, associated_token::authority = owner)]
-    pub owner_share_account: Account<'info, TokenAccount>,
+    pub owner_share_account: Box<Account<'info, TokenAccount>>,
     /// CHECK: rental vault PDA
     #[account(mut, seeds = [b"rental", property.key().as_ref()], bump)]
     pub rental_vault: SystemAccount<'info>,

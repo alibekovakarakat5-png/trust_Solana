@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Dashboard from './pages/Dashboard';
@@ -5,8 +6,20 @@ import Properties from './pages/Properties';
 import Tokenize from './pages/Tokenize';
 import Deals from './pages/Deals';
 import { Toaster } from 'react-hot-toast';
+import { useStore } from './store/useStore';
+import { DEMO_PROPERTIES, DEMO_DEALS, DEMO_STATS } from './lib/demoData';
 
 export default function App() {
+  const { properties, setProperties, setDeals, setStats } = useStore();
+
+  useEffect(() => {
+    if (properties.length === 0) {
+      setProperties(DEMO_PROPERTIES);
+      setDeals(DEMO_DEALS);
+      setStats(DEMO_STATS);
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-950 text-white">
       <Navbar />

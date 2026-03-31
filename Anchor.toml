@@ -3,10 +3,10 @@ seeds = false
 skip-lint = false
 
 [programs.localnet]
-trustestate = "trustEst1111111111111111111111111111111"
+trustestate = "8j9MKKmvkYeZw9SUtt7KucShygxcjZHMYpnGoJFUY1MY"
 
 [programs.devnet]
-trustestate = "trustEst1111111111111111111111111111111"
+trustestate = "8j9MKKmvkYeZw9SUtt7KucShygxcjZHMYpnGoJFUY1MY"
 
 [registry]
 url = "https://api.apr.dev"

@@ -1,7 +1,7 @@
 [package]
 name = "trustestate"
 version = "0.1.0"
-description = "TrustEstate — Tokenized Real Estate with AI Fraud Detection on Solana"
+description = "TrustEstate"
 edition = "2021"
 
 [lib]

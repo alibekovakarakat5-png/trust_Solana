@@ -29,10 +29,34 @@ export default function Dashboard() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">TrustEstate Dashboard</h1>
-        <p className="text-gray-400">AI-powered real estate fraud detection on Solana</p>
-      </div>
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary-900/60 via-gray-900 to-purple-900/40 border border-primary-800/30 p-8 mb-8"
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary-500/10 via-transparent to-transparent" />
+        <div className="relative">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center">
+              <Shield className="w-7 h-7 text-primary-400" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold">TrustEstate</h1>
+              <p className="text-primary-300/80 text-sm">Secure Real Estate on Solana</p>
+            </div>
+          </div>
+          <p className="text-gray-300 max-w-2xl mt-3">
+            Tokenized real estate with AI-powered fraud detection. Every property is an NFT,
+            every deal goes through AI verification and escrow smart contract.
+            Fraud becomes structurally impossible.
+          </p>
+          <div className="flex gap-3 mt-5">
+            <span className="text-xs px-3 py-1 rounded-full bg-green-500/10 text-green-400 border border-green-500/20">Solana Devnet</span>
+            <span className="text-xs px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">AI Fraud Detection</span>
+            <span className="text-xs px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20">Escrow Protected</span>
+          </div>
+        </div>
+      </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <StatCard icon={Home} label="Total Properties" value={stats.totalProperties} color="bg-primary-600/20 text-primary-400" />

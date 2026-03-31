@@ -1,0 +1,41 @@
+FROM backpackapp/build:v0.29.0
+
+WORKDIR /build
+COPY Anchor.toml Cargo.lock ./
+
+COPY <<'TOML' Cargo.toml
+[workspace]
+members = ["programs/trustestate"]
+resolver = "2"
+
+[profile.release]
+overflow-checks = true
+lto = "fat"
+codegen-units = 1
+TOML
+
+COPY <<'TOML' programs/trustestate/Cargo.toml
+[package]
+name = "trustestate"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "trustestate"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+
+[dependencies]
+anchor-lang = "0.29.0"
+anchor-spl = "0.29.0"
+TOML
+
+COPY programs/trustestate/src/ programs/trustestate/src/
+
+RUN cargo build-sbf --manifest-path programs/trustestate/Cargo.toml -- --locked

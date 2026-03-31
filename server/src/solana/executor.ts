@@ -1,7 +1,7 @@
 import { Connection, Keypair, PublicKey, Transaction, SystemProgram } from '@solana/web3.js';
 import * as anchor from '@coral-xyz/anchor';
 
-const PROGRAM_ID = new PublicKey('trustEst1111111111111111111111111111111');
+const PROGRAM_ID = new PublicKey('8j9MKKmvkYeZw9SUtt7KucShygxcjZHMYpnGoJFUY1MY');
 
 export function getConnection(): Connection {
   return new Connection(
