@@ -130,36 +130,10 @@ export default function Tokenize() {
       });
 
       setStep('result');
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      setResult({
-        verificationScore: 85,
-        isVerified: true,
-        fraudFlags: 0,
-        fraudDetails: 'AI verification complete. No fraud detected.',
-        marketPriceEstimate: Number(form.price) * 1e9,
-        propertyId,
-      });
-
-      addProperty({
-        propertyId,
-        address: form.address,
-        areaSqm: Number(form.areaSqm),
-        rooms: Number(form.rooms),
-        floor: Number(form.floor),
-        totalFloors: Number(form.totalFloors),
-        cadastralId: form.cadastralId,
-        priceLamports: Number(form.price) * 1e9,
-        propertyType: form.propertyType,
-        isVerified: true,
-        aiScore: 85,
-        fraudFlags: 0,
-        isListed: true,
-        owner: publicKey.toBase58(),
-        status: 'verified',
-      });
-
-      setStep('result');
+      toast.error(t('tokenize.verification_failed') || 'AI verification failed. Please try again.');
+      setStep('form');
     }
   }
 

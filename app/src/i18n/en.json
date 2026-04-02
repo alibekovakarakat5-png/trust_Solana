@@ -98,7 +98,8 @@
     "result_not_verified": "Issues Detected",
     "score": "AI Score",
     "market_estimate": "Market Estimate",
-    "add_another": "Add Another Property"
+    "add_another": "Add Another Property",
+    "verification_failed": "AI verification failed. Please try again."
   },
   "deals": {
     "title": "Deals",
@@ -118,7 +119,8 @@
     "approve": "Approve",
     "review": "Review",
     "block": "Block",
-    "no_deals": "No deals"
+    "no_deals": "No deals",
+    "ai_check_failed": "AI check failed. Please try again."
   },
   "status": {
     "created": "Created",

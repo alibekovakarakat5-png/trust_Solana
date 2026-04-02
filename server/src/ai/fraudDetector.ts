@@ -44,7 +44,9 @@ export interface DealCheckResult {
   recommendation: 'approve' | 'review' | 'block';
 }
 
-const AI_PROVIDER = process.env.AI_PROVIDER || 'mock'; // 'alemllm' | 'openai' | 'anthropic' | 'mock'
+function getAiProvider() {
+  return process.env.AI_PROVIDER || 'mock';
+}
 
 // =========================================
 // AI через AlemLLM (Alem Plus — Kazakhstan AI)
@@ -111,9 +113,10 @@ async function callAnthropic(prompt: string): Promise<string> {
 // Универсальный вызов AI
 // =========================================
 async function callAI(prompt: string): Promise<string> {
-  if (AI_PROVIDER === 'alemllm') return callAlemLLM(prompt);
-  if (AI_PROVIDER === 'openai') return callOpenAI(prompt);
-  if (AI_PROVIDER === 'anthropic') return callAnthropic(prompt);
+  const provider = getAiProvider();
+  if (provider === 'alemllm') return callAlemLLM(prompt);
+  if (provider === 'openai') return callOpenAI(prompt);
+  if (provider === 'anthropic') return callAnthropic(prompt);
   return '';
 }
 
@@ -230,7 +233,7 @@ function mockCheckDeal(data: DealData): DealCheckResult {
 // =========================================
 
 export async function verifyProperty(data: PropertyData): Promise<VerificationResult> {
-  if (AI_PROVIDER === 'mock') return mockVerifyProperty(data);
+  if (getAiProvider() === 'mock') return mockVerifyProperty(data);
 
   const pricePerSqm = data.priceLamports / data.areaSqm;
   const prompt = `You are a real estate fraud detection AI for Kazakhstan market.
@@ -255,7 +258,7 @@ Respond JSON only:
 }
 
 export async function checkDeal(data: DealData): Promise<DealCheckResult> {
-  if (AI_PROVIDER === 'mock') return mockCheckDeal(data);
+  if (getAiProvider() === 'mock') return mockCheckDeal(data);
 
   const priceDiff = data.marketEstimate > 0
     ? ((data.price - data.marketEstimate) / data.marketEstimate * 100).toFixed(1)

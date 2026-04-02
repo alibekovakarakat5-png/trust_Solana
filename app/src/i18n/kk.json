@@ -98,7 +98,8 @@
     "result_not_verified": "Мәселелер анықталды",
     "score": "AI бағасы",
     "market_estimate": "Нарықтық баға",
-    "add_another": "Тағы нысан қосу"
+    "add_another": "Тағы нысан қосу",
+    "verification_failed": "AI верификация сәтсіз аяқталды. Қайта көріңіз."
   },
   "deals": {
     "title": "Мәмілелер",
@@ -118,7 +119,8 @@
     "approve": "Мақұлдау",
     "review": "Тексеруге",
     "block": "Тоқтату",
-    "no_deals": "Мәмілелер жоқ"
+    "no_deals": "Мәмілелер жоқ",
+    "ai_check_failed": "AI тексеру сәтсіз аяқталды. Қайта көріңіз."
   },
   "status": {
     "created": "Құрылды",

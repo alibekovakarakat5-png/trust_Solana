@@ -98,7 +98,8 @@
     "result_not_verified": "Обнаружены проблемы",
     "score": "Оценка AI",
     "market_estimate": "Рыночная оценка",
-    "add_another": "Добавить ещё объект"
+    "add_another": "Добавить ещё объект",
+    "verification_failed": "AI верификация не удалась. Попробуйте ещё раз."
   },
   "deals": {
     "title": "Сделки",
@@ -118,7 +119,8 @@
     "approve": "Одобрить",
     "review": "На проверку",
     "block": "Заблокировать",
-    "no_deals": "Нет сделок"
+    "no_deals": "Нет сделок",
+    "ai_check_failed": "AI проверка не удалась. Попробуйте ещё раз."
   },
   "status": {
     "created": "Создан",

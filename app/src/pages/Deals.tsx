@@ -99,8 +99,9 @@ export default function Deals() {
       }
 
       if (result.recommendation === 'block') incrementFraudBlocked();
-    } catch {
-      updateDeal(dealId, { aiRiskScore: 25, aiFlags: [], status: 'ai_approved' });
+    } catch (err: any) {
+      console.error(err);
+      toast.error(t('deals.ai_check_failed') || 'AI check failed. Please try again.');
     } finally {
       setProcessing(null);
     }

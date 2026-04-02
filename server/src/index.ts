@@ -1,11 +1,11 @@
+import dotenv from 'dotenv';
+dotenv.config(); // MUST be before other imports so process.env is available
+
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import { propertyRoutes } from './routes/property';
 import { dealRoutes } from './routes/deal';
 import { aiRoutes } from './routes/ai';
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
