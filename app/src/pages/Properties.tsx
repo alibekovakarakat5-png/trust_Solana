@@ -1,14 +1,17 @@
 import { useTranslation } from 'react-i18next';
-import { Home, MapPin, Maximize, Shield } from 'lucide-react';
+import { Home, MapPin, Maximize, Shield, ShoppingCart } from 'lucide-react';
 import { useStore } from '../store/useStore';
+import { useWallet } from '@solana/wallet-adapter-react';
 import StatusBadge from '../components/StatusBadge';
 import RiskBadge from '../components/RiskBadge';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Properties() {
   const { t } = useTranslation();
   const { properties } = useStore();
+  const { publicKey } = useWallet();
+  const navigate = useNavigate();
 
   if (properties.length === 0) {
     return (
@@ -70,6 +73,15 @@ export default function Properties() {
                   </div>
                 )}
               </div>
+              {prop.isListed && publicKey && prop.owner !== publicKey.toBase58() && (
+                <button
+                  onClick={() => navigate('/deals', { state: { propertyId: prop.propertyId, price: prop.priceLamports / 1e9 } })}
+                  className="w-full mt-3 bg-green-600 hover:bg-green-500 text-white font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
+                >
+                  <ShoppingCart className="w-4 h-4" />
+                  {t('properties.buy')}
+                </button>
+              )}
             </div>
           </motion.div>
         ))}

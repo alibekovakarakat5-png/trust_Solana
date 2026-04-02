@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { motion } from 'framer-motion';
-import { Upload, Shield, AlertTriangle, CheckCircle, Loader2, ExternalLink } from 'lucide-react';
+import { Upload, Shield, AlertTriangle, CheckCircle, Loader2, ExternalLink, UserCheck, FileCheck, KeyRound } from 'lucide-react';
 import { api } from '../lib/api';
 import { useStore } from '../store/useStore';
 import { useTxStore } from '../store/useTxStore';
@@ -29,11 +29,34 @@ export default function Tokenize() {
     propertyType: 'Apartment',
   });
 
+  const [ownershipForm, setOwnershipForm] = useState({ iin: '', cadastralId: '' });
+  const [ownershipVerified, setOwnershipVerified] = useState(false);
+  const [ownershipChecking, setOwnershipChecking] = useState(false);
+
   const [result, setResult] = useState<any>(null);
-  const [step, setStep] = useState<'form' | 'verifying' | 'result'>('form');
+  const [step, setStep] = useState<'ownership' | 'form' | 'verifying' | 'result'>('ownership');
   const [solanaResult, setSolanaResult] = useState<{ tx: string; mint: string } | null>(null);
 
   const update = (key: string, val: string) => setForm(prev => ({ ...prev, [key]: val }));
+
+  async function handleOwnershipCheck(e: React.FormEvent) {
+    e.preventDefault();
+    setOwnershipChecking(true);
+
+    // Имитация проверки через ЕГКН (в продакшене — реальный API)
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    setOwnershipVerified(true);
+    setOwnershipChecking(false);
+
+    // Переносим кадастровый номер в основную форму
+    setForm(prev => ({ ...prev, cadastralId: ownershipForm.cadastralId }));
+
+    toast.success(t('tokenize.ownership_confirmed') || 'Ownership verified via EGKN');
+
+    // Переход к форме через секунду
+    setTimeout(() => setStep('form'), 1000);
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -160,6 +183,109 @@ export default function Tokenize() {
         <h1 className="text-2xl font-bold">{t('tokenize.title')}</h1>
         <p className="text-sm text-gray-500">{t('tokenize.subtitle')}</p>
       </div>
+
+      {step === 'ownership' && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
+          {/* Step indicator */}
+          <div className="flex items-center gap-3 mb-2">
+            <div className="flex items-center gap-2 text-primary-400">
+              <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white text-sm font-bold">1</div>
+              <span className="text-sm font-medium">{t('tokenize.step_ownership')}</span>
+            </div>
+            <div className="h-px flex-1 bg-gray-700" />
+            <div className="flex items-center gap-2 text-gray-600">
+              <div className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-500 text-sm font-bold">2</div>
+              <span className="text-sm">{t('tokenize.step_details')}</span>
+            </div>
+            <div className="h-px flex-1 bg-gray-700" />
+            <div className="flex items-center gap-2 text-gray-600">
+              <div className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-500 text-sm font-bold">3</div>
+              <span className="text-sm">{t('tokenize.step_verify')}</span>
+            </div>
+          </div>
+
+          <form onSubmit={handleOwnershipCheck} className="bg-gray-900 border border-gray-800 rounded-xl p-6 space-y-5">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center">
+                <UserCheck className="w-6 h-6 text-primary-400" />
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold">{t('tokenize.ownership_title')}</h2>
+                <p className="text-sm text-gray-500">{t('tokenize.ownership_desc')}</p>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm text-gray-400 mb-1">{t('tokenize.iin_label')}</label>
+              <input
+                type="text"
+                value={ownershipForm.iin}
+                onChange={e => setOwnershipForm(prev => ({ ...prev, iin: e.target.value }))}
+                placeholder="950101350123"
+                maxLength={12}
+                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:border-primary-500 outline-none font-mono tracking-wider"
+                required
+              />
+              <p className="text-xs text-gray-600 mt-1">{t('tokenize.iin_hint')}</p>
+            </div>
+
+            <div>
+              <label className="block text-sm text-gray-400 mb-1">{t('tokenize.form_cadastral')}</label>
+              <input
+                type="text"
+                value={ownershipForm.cadastralId}
+                onChange={e => setOwnershipForm(prev => ({ ...prev, cadastralId: e.target.value }))}
+                placeholder="20:01:123456:789"
+                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:border-primary-500 outline-none font-mono"
+                required
+              />
+            </div>
+
+            <div className="border border-dashed border-gray-700 rounded-lg p-6 text-center">
+              <KeyRound className="w-8 h-8 text-gray-500 mx-auto mb-2" />
+              <p className="text-sm text-gray-400">{t('tokenize.sign_wallet')}</p>
+              <p className="text-xs text-gray-600 mt-1">{t('tokenize.sign_wallet_desc')}</p>
+            </div>
+
+            {ownershipVerified && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex items-center gap-3 p-4 bg-green-950/30 border border-green-800 rounded-lg"
+              >
+                <FileCheck className="w-6 h-6 text-green-400" />
+                <div>
+                  <p className="text-green-400 font-semibold">{t('tokenize.ownership_confirmed')}</p>
+                  <p className="text-xs text-green-400/60">{t('tokenize.egkn_match')}</p>
+                </div>
+              </motion.div>
+            )}
+
+            <button
+              type="submit"
+              disabled={ownershipChecking || ownershipVerified}
+              className="w-full bg-primary-600 hover:bg-primary-700 disabled:opacity-50 text-white font-medium py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
+            >
+              {ownershipChecking ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  {t('tokenize.checking_egkn')}
+                </>
+              ) : ownershipVerified ? (
+                <>
+                  <CheckCircle className="w-5 h-5" />
+                  {t('tokenize.ownership_confirmed')}
+                </>
+              ) : (
+                <>
+                  <Shield className="w-5 h-5" />
+                  {t('tokenize.verify_ownership')}
+                </>
+              )}
+            </button>
+          </form>
+        </motion.div>
+      )}
 
       {step === 'form' && (
         <motion.form
@@ -298,7 +424,7 @@ export default function Tokenize() {
           </div>
 
           <button
-            onClick={() => { setStep('form'); setResult(null); setSolanaResult(null); setForm({ address: '', areaSqm: '', rooms: '', floor: '', totalFloors: '', cadastralId: '', price: '', propertyType: 'Apartment' }); }}
+            onClick={() => { setStep('ownership'); setResult(null); setSolanaResult(null); setOwnershipVerified(false); setOwnershipForm({ iin: '', cadastralId: '' }); setForm({ address: '', areaSqm: '', rooms: '', floor: '', totalFloors: '', cadastralId: '', price: '', propertyType: 'Apartment' }); }}
             className="w-full bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 rounded-lg transition-colors"
           >
             {t('tokenize.add_another')}
