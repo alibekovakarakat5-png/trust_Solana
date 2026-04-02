@@ -75,7 +75,15 @@
     "verified": "Верифицирован",
     "not_verified": "Не верифицирован",
     "no_properties": "Нет объектов",
-    "buy": "Купить"
+    "buy": "Купить",
+    "fractionalize": "Разделить на доли",
+    "fractionalize_title": "Дробное владение",
+    "total_shares": "Всего долей",
+    "price_per_share": "Цена за долю (SOL)",
+    "fractionalized": "Разделён на доли",
+    "buy_shares": "Купить доли",
+    "shares_available": "долей доступно",
+    "rental_income": "Доход от аренды"
   },
   "tokenize": {
     "title": "Токенизация объекта",
@@ -134,7 +142,15 @@
     "review": "На проверку",
     "block": "Заблокировать",
     "no_deals": "Нет сделок",
-    "ai_check_failed": "AI проверка не удалась. Попробуйте ещё раз."
+    "ai_check_failed": "AI проверка не удалась. Попробуйте ещё раз.",
+    "fund_escrow": "Пополнить эскроу",
+    "confirm_deal": "Подтвердить сделку",
+    "execute_deal": "Исполнить сделку",
+    "cancel_deal": "Отменить",
+    "funded_success": "Эскроу пополнен! SOL внесён.",
+    "confirmed_success": "Сделка подтверждена продавцом!",
+    "executed_success": "Сделка исполнена! Собственность передана.",
+    "cancelled_success": "Сделка отменена. Средства возвращены."
   },
   "status": {
     "created": "Создан",

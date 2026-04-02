@@ -75,7 +75,15 @@
     "verified": "Верификацияланған",
     "not_verified": "Верификацияланбаған",
     "no_properties": "Нысандар жоқ",
-    "buy": "Сатып алу"
+    "buy": "Сатып алу",
+    "fractionalize": "Үлестерге бөлу",
+    "fractionalize_title": "Үлестік меншік",
+    "total_shares": "Барлық үлестер",
+    "price_per_share": "Бір үлес бағасы (SOL)",
+    "fractionalized": "Үлестерге бөлінді",
+    "buy_shares": "Үлестерді сатып алу",
+    "shares_available": "үлес қолжетімді",
+    "rental_income": "Жалдау табысы"
   },
   "tokenize": {
     "title": "Нысанды токенизациялау",
@@ -134,7 +142,15 @@
     "review": "Тексеруге",
     "block": "Тоқтату",
     "no_deals": "Мәмілелер жоқ",
-    "ai_check_failed": "AI тексеру сәтсіз аяқталды. Қайта көріңіз."
+    "ai_check_failed": "AI тексеру сәтсіз аяқталды. Қайта көріңіз.",
+    "fund_escrow": "Эскроуды толтыру",
+    "confirm_deal": "Мәмілені растау",
+    "execute_deal": "Мәмілені орындау",
+    "cancel_deal": "Бас тарту",
+    "funded_success": "Эскроу толтырылды! SOL салынды.",
+    "confirmed_success": "Мәміле сатушымен расталды!",
+    "executed_success": "Мәміле орындалды! Меншік берілді.",
+    "cancelled_success": "Мәміле бас тартылды. Қаражат қайтарылды."
   },
   "status": {
     "created": "Құрылды",

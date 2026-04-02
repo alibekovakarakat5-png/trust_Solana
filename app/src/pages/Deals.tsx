@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { motion } from 'framer-motion';
-import { FileText, Shield, Loader2, ArrowRight, ExternalLink } from 'lucide-react';
+import { FileText, Shield, Loader2, ArrowRight, ExternalLink, Wallet, CheckCheck, Zap, XCircle } from 'lucide-react';
 import { api } from '../lib/api';
 import { useStore } from '../store/useStore';
 import { useTxStore } from '../store/useTxStore';
@@ -103,6 +103,37 @@ export default function Deals() {
       console.error(err);
       toast.error(t('deals.ai_check_failed') || 'AI check failed. Please try again.');
     } finally {
+      setProcessing(null);
+    }
+  }
+
+  async function handleStatusChange(dealId: string, newStatus: string, toastKey: string) {
+    setProcessing(dealId);
+    try {
+      await api.updateDealStatus(dealId, { status: newStatus });
+      updateDeal(dealId, { status: newStatus });
+      toast.success(t(toastKey));
+    } catch (err: any) {
+      console.error(err);
+      toast.error(t('common.error'));
+    } finally {
+      setProcessing(null);
+    }
+  }
+
+  async function handleConfirmDeal(dealId: string) {
+    setProcessing(dealId);
+    try {
+      // First set to awaiting_ai, then auto-run AI check
+      await api.updateDealStatus(dealId, { status: 'awaiting_ai' });
+      updateDeal(dealId, { status: 'awaiting_ai' });
+      toast.success(t('deals.confirmed_success'));
+      // Auto-run AI check after confirmation
+      setProcessing(null);
+      await runAiCheck(dealId);
+    } catch (err: any) {
+      console.error(err);
+      toast.error(t('common.error'));
       setProcessing(null);
     }
   }
@@ -212,16 +243,94 @@ export default function Deals() {
                 </div>
               )}
 
-              {deal.status === 'created' && (
-                <button
-                  onClick={() => runAiCheck(deal.dealId)}
-                  disabled={processing === deal.dealId}
-                  className="bg-primary-600 hover:bg-primary-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2"
-                >
-                  {processing === deal.dealId ? <Loader2 className="w-4 h-4 animate-spin" /> : <Shield className="w-4 h-4" />}
-                  {processing === deal.dealId ? t('deals.checking') : t('deals.check_ai')}
-                </button>
-              )}
+              {/* Escrow lifecycle buttons */}
+              <div className="flex gap-2 flex-wrap">
+                {/* created: AI Check + Cancel */}
+                {deal.status === 'created' && (
+                  <>
+                    <button
+                      onClick={() => runAiCheck(deal.dealId)}
+                      disabled={processing === deal.dealId}
+                      className="bg-primary-600 hover:bg-primary-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2"
+                    >
+                      {processing === deal.dealId ? <Loader2 className="w-4 h-4 animate-spin" /> : <Shield className="w-4 h-4" />}
+                      {processing === deal.dealId ? t('deals.checking') : t('deals.check_ai')}
+                    </button>
+                    <button
+                      onClick={() => handleStatusChange(deal.dealId, 'cancelled', 'deals.cancelled_success')}
+                      disabled={processing === deal.dealId}
+                      className="bg-gray-700 hover:bg-gray-600 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2"
+                    >
+                      <XCircle className="w-4 h-4" />
+                      {t('deals.cancel_deal')}
+                    </button>
+                  </>
+                )}
+
+                {/* ai_approved: Fund Escrow + Execute Deal + Cancel */}
+                {deal.status === 'ai_approved' && (
+                  <>
+                    <button
+                      onClick={() => handleStatusChange(deal.dealId, 'funded', 'deals.funded_success')}
+                      disabled={processing === deal.dealId}
+                      className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2"
+                    >
+                      <Wallet className="w-4 h-4" />
+                      {t('deals.fund_escrow')}
+                    </button>
+                    <button
+                      onClick={() => handleStatusChange(deal.dealId, 'completed', 'deals.executed_success')}
+                      disabled={processing === deal.dealId}
+                      className="bg-green-600 hover:bg-green-500 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2"
+                    >
+                      <Zap className="w-4 h-4" />
+                      {t('deals.execute_deal')}
+                    </button>
+                    <button
+                      onClick={() => handleStatusChange(deal.dealId, 'cancelled', 'deals.cancelled_success')}
+                      disabled={processing === deal.dealId}
+                      className="bg-gray-700 hover:bg-gray-600 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2"
+                    >
+                      <XCircle className="w-4 h-4" />
+                      {t('deals.cancel_deal')}
+                    </button>
+                  </>
+                )}
+
+                {/* funded: Confirm Deal + Cancel */}
+                {deal.status === 'funded' && (
+                  <>
+                    <button
+                      onClick={() => handleConfirmDeal(deal.dealId)}
+                      disabled={processing === deal.dealId}
+                      className="bg-green-600 hover:bg-green-500 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2"
+                    >
+                      {processing === deal.dealId ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCheck className="w-4 h-4" />}
+                      {t('deals.confirm_deal')}
+                    </button>
+                    <button
+                      onClick={() => handleStatusChange(deal.dealId, 'cancelled', 'deals.cancelled_success')}
+                      disabled={processing === deal.dealId}
+                      className="bg-gray-700 hover:bg-gray-600 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2"
+                    >
+                      <XCircle className="w-4 h-4" />
+                      {t('deals.cancel_deal')}
+                    </button>
+                  </>
+                )}
+
+                {/* under_review: Cancel only */}
+                {deal.status === 'under_review' && (
+                  <button
+                    onClick={() => handleStatusChange(deal.dealId, 'cancelled', 'deals.cancelled_success')}
+                    disabled={processing === deal.dealId}
+                    className="bg-gray-700 hover:bg-gray-600 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2"
+                  >
+                    <XCircle className="w-4 h-4" />
+                    {t('deals.cancel_deal')}
+                  </button>
+                )}
+              </div>
             </motion.div>
           ))}
         </div>

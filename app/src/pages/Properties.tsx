@@ -1,17 +1,39 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Home, MapPin, Maximize, Shield, ShoppingCart } from 'lucide-react';
+import { Home, MapPin, Maximize, Shield, ShoppingCart, Layers, ShoppingBag } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { useWallet } from '@solana/wallet-adapter-react';
 import StatusBadge from '../components/StatusBadge';
 import RiskBadge from '../components/RiskBadge';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 export default function Properties() {
   const { t } = useTranslation();
-  const { properties } = useStore();
+  const { properties, updateProperty } = useStore();
   const { publicKey } = useWallet();
   const navigate = useNavigate();
+  const [fractionalizing, setFractionalizing] = useState<string | null>(null);
+  const [totalShares, setTotalShares] = useState('');
+  const [pricePerShare, setPricePerShare] = useState('');
+
+  function handleFractionalize(propertyId: string, e: React.FormEvent) {
+    e.preventDefault();
+    const shares = Number(totalShares);
+    const price = Number(pricePerShare);
+    if (shares <= 0 || price <= 0) return;
+    updateProperty(propertyId, {
+      isFractionalized: true,
+      totalShares: shares,
+      pricePerShare: price,
+      availableShares: shares,
+    });
+    toast.success(t('properties.fractionalized'));
+    setFractionalizing(null);
+    setTotalShares('');
+    setPricePerShare('');
+  }
 
   if (properties.length === 0) {
     return (
@@ -73,7 +95,22 @@ export default function Properties() {
                   </div>
                 )}
               </div>
-              {prop.isListed && publicKey && prop.owner !== publicKey.toBase58() && (
+              {/* Fractionalized badge & share info */}
+              {prop.isFractionalized && (
+                <div className="mt-2 bg-purple-500/10 border border-purple-500/20 rounded-lg p-2">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Layers className="w-3 h-3 text-purple-400" />
+                    <span className="text-xs font-medium text-purple-400">{t('properties.fractionalized')}</span>
+                  </div>
+                  <div className="flex justify-between text-xs text-gray-400">
+                    <span>{prop.availableShares}/{prop.totalShares} {t('properties.shares_available')}</span>
+                    <span>{prop.pricePerShare} SOL/{t('properties.total_shares').toLowerCase()}</span>
+                  </div>
+                </div>
+              )}
+
+              {/* Buy button for non-owned listed properties */}
+              {prop.isListed && publicKey && prop.owner !== publicKey.toBase58() && !prop.isFractionalized && (
                 <button
                   onClick={() => navigate('/deals', { state: { propertyId: prop.propertyId, price: prop.priceLamports / 1e9 } })}
                   className="w-full mt-3 bg-green-600 hover:bg-green-500 text-white font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
@@ -81,6 +118,53 @@ export default function Properties() {
                   <ShoppingCart className="w-4 h-4" />
                   {t('properties.buy')}
                 </button>
+              )}
+
+              {/* Buy Shares button for non-owned fractionalized properties */}
+              {prop.isFractionalized && publicKey && prop.owner !== publicKey.toBase58() && (
+                <button
+                  onClick={() => toast('Coming soon in Phase 2', { icon: '🔜' })}
+                  className="w-full mt-2 bg-purple-600 hover:bg-purple-500 text-white font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
+                >
+                  <ShoppingBag className="w-4 h-4" />
+                  {t('properties.buy_shares')}
+                </button>
+              )}
+
+              {/* Fractionalize button for owned verified properties */}
+              {publicKey && prop.owner === publicKey.toBase58() && prop.isVerified && !prop.isFractionalized && (
+                <>
+                  {fractionalizing === prop.propertyId ? (
+                    <motion.form
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      onSubmit={(e) => handleFractionalize(prop.propertyId, e)}
+                      className="mt-3 bg-gray-800 border border-gray-700 rounded-lg p-3 space-y-2"
+                    >
+                      <h4 className="text-xs font-semibold text-purple-400">{t('properties.fractionalize_title')}</h4>
+                      <div>
+                        <label className="block text-xs text-gray-400 mb-1">{t('properties.total_shares')}</label>
+                        <input type="number" min="2" step="1" value={totalShares} onChange={e => setTotalShares(e.target.value)} className="w-full bg-gray-900 border border-gray-700 rounded px-2 py-1 text-sm text-white outline-none" required />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-gray-400 mb-1">{t('properties.price_per_share')}</label>
+                        <input type="number" min="0.001" step="0.001" value={pricePerShare} onChange={e => setPricePerShare(e.target.value)} className="w-full bg-gray-900 border border-gray-700 rounded px-2 py-1 text-sm text-white outline-none" required />
+                      </div>
+                      <div className="flex gap-2">
+                        <button type="submit" className="bg-purple-600 hover:bg-purple-500 text-white px-3 py-1 rounded text-xs">{t('properties.fractionalize')}</button>
+                        <button type="button" onClick={() => { setFractionalizing(null); setTotalShares(''); setPricePerShare(''); }} className="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded text-xs">{t('deals.cancel_deal')}</button>
+                      </div>
+                    </motion.form>
+                  ) : (
+                    <button
+                      onClick={() => setFractionalizing(prop.propertyId)}
+                      className="w-full mt-3 bg-purple-600 hover:bg-purple-500 text-white font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
+                    >
+                      <Layers className="w-4 h-4" />
+                      {t('properties.fractionalize')}
+                    </button>
+                  )}
+                </>
               )}
             </div>
           </motion.div>

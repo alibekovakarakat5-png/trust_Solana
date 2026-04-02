@@ -16,6 +16,10 @@ interface Property {
   isListed: boolean;
   owner: string;
   status: string;
+  isFractionalized?: boolean;
+  totalShares?: number;
+  pricePerShare?: number;
+  availableShares?: number;
 }
 
 interface Deal {
@@ -43,6 +47,7 @@ interface AppState {
   stats: PlatformStats;
   setProperties: (p: Property[]) => void;
   addProperty: (p: Property) => void;
+  updateProperty: (id: string, update: Partial<Property>) => void;
   setDeals: (d: Deal[]) => void;
   addDeal: (d: Deal) => void;
   updateDeal: (id: string, update: Partial<Deal>) => void;
@@ -59,6 +64,9 @@ export const useStore = create<AppState>((set) => ({
   addProperty: (p) => set((s) => ({
     properties: [...s.properties, p],
     stats: { ...s.stats, totalProperties: s.stats.totalProperties + 1 },
+  })),
+  updateProperty: (id, update) => set((s) => ({
+    properties: s.properties.map((p) => (p.propertyId === id ? { ...p, ...update } : p)),
   })),
   setDeals: (deals) => set({ deals }),
   addDeal: (d) => set((s) => ({

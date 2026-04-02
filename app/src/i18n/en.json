@@ -75,7 +75,15 @@
     "verified": "Verified",
     "not_verified": "Not Verified",
     "no_properties": "No properties",
-    "buy": "Buy"
+    "buy": "Buy",
+    "fractionalize": "Fractionalize",
+    "fractionalize_title": "Fractional Ownership",
+    "total_shares": "Total Shares",
+    "price_per_share": "Price per Share (SOL)",
+    "fractionalized": "Fractionalized",
+    "buy_shares": "Buy Shares",
+    "shares_available": "shares available",
+    "rental_income": "Rental Income"
   },
   "tokenize": {
     "title": "Tokenize Property",
@@ -134,7 +142,15 @@
     "review": "Review",
     "block": "Block",
     "no_deals": "No deals",
-    "ai_check_failed": "AI check failed. Please try again."
+    "ai_check_failed": "AI check failed. Please try again.",
+    "fund_escrow": "Fund Escrow",
+    "confirm_deal": "Confirm Deal",
+    "execute_deal": "Execute Deal",
+    "cancel_deal": "Cancel",
+    "funded_success": "Escrow funded! SOL deposited.",
+    "confirmed_success": "Deal confirmed by seller!",
+    "executed_success": "Deal executed! Ownership transferred.",
+    "cancelled_success": "Deal cancelled. Funds returned."
   },
   "status": {
     "created": "Created",
