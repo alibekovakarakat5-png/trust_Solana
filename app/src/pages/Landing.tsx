@@ -44,11 +44,11 @@ export default function Landing() {
           </motion.div>
 
           <motion.h1 variants={fadeUp} className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-primary-200 to-primary-400 bg-clip-text text-transparent leading-tight">
-            {t('landing.title')}
+            {t('landing.title') || 'Real Estate Fraud Protection'}
           </motion.h1>
 
           <motion.p variants={fadeUp} className="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto mb-10 leading-relaxed">
-            {t('landing.subtitle')}
+            {t('landing.subtitle') || 'AI + Solana blockchain to verify every real estate transaction in Kazakhstan. Tokenization, escrow, transparency.'}
           </motion.p>
 
           <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 justify-center">

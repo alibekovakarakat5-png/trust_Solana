@@ -18,7 +18,12 @@ app.use('/api/deal', dealRoutes);
 app.use('/api/ai', aiRoutes);
 
 app.get('/api/health', (_, res) => {
-  res.json({ status: 'ok', service: 'trustestate-server' });
+  res.json({
+    status: 'ok',
+    service: 'trustestate-server',
+    aiProvider: process.env.AI_PROVIDER || 'mock',
+    oracleConfigured: !!process.env.ORACLE_PRIVATE_KEY,
+  });
 });
 
 app.listen(PORT, () => {

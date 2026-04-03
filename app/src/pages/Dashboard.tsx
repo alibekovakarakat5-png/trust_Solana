@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Shield, Home, FileText, AlertTriangle, TrendingUp, CheckCircle, ExternalLink, Loader2, Wifi, WifiOff } from 'lucide-react';
+import { Shield, Home, FileText, AlertTriangle, TrendingUp, CheckCircle, ExternalLink, Loader2, Wifi, WifiOff, Brain, Database } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { useTrustEstate } from '../hooks/useTrustEstate';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -47,6 +47,7 @@ export default function Dashboard() {
   } | null>(null);
   const [platformInitialized, setPlatformInitialized] = useState<boolean | null>(null);
   const [initializing, setInitializing] = useState(false);
+  const [aiProvider, setAiProvider] = useState<string | null>(null);
 
   const verifiedCount = properties.filter(p => p.isVerified).length;
 
@@ -62,6 +63,12 @@ export default function Dashboard() {
       }
     });
   }, [publicKey, fetchPlatformState]);
+
+  useEffect(() => {
+    fetch('/api/health').then(r => r.json()).then(d => {
+      setAiProvider(d.aiProvider || 'mock');
+    }).catch(() => setAiProvider(null));
+  }, []);
 
   async function handleInitPlatform() {
     setInitializing(true);
@@ -122,7 +129,14 @@ export default function Dashboard() {
               {platformInitialized ? <Wifi className="w-3 h-3" /> : <WifiOff className="w-3 h-3" />}
               Solana Devnet
             </span>
-            <span className="text-xs px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">AI Fraud Detection</span>
+            <span className="text-xs px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center gap-1">
+              <Brain className="w-3 h-3" />
+              {aiProvider ? `AI: ${aiProvider.toUpperCase()}` : 'AI Fraud Detection'}
+            </span>
+            <span className={`text-xs px-3 py-1 rounded-full flex items-center gap-1 ${onChainStats ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20'}`}>
+              <Database className="w-3 h-3" />
+              {onChainStats ? 'On-Chain Data' : 'Demo Data'}
+            </span>
             <a
               href={`https://explorer.solana.com/address/${PROGRAM_ID}?cluster=devnet`}
               target="_blank"

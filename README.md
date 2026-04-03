@@ -197,6 +197,43 @@ trust_solana_repo/
 
 ---
 
+## 🧪 How to Test (for Judges)
+
+**Prerequisites:** Node.js 18+, Phantom wallet (set to Devnet)
+
+```bash
+# 1. Start backend
+cd server
+cp .env.example .env        # then fill in your keys
+npm install && npm run dev   # → port 3001
+
+# 2. Start frontend (new terminal)
+cd app
+npm install && npm run dev   # → http://localhost:5175
+```
+
+**Full demo flow (5 minutes):**
+
+| Step | Action | What to look for |
+|------|--------|-----------------|
+| 1 | Open http://localhost:5175 | Landing page with program ID + Solana Explorer link |
+| 2 | Connect Phantom wallet (Devnet) | Dashboard loads, badges show data source + AI provider |
+| 3 | Click "Initialize Platform" (if first run) | Transaction on Solana Explorer, stats switch to "On-Chain Data" |
+| 4 | Go to **Tokenize** → fill IIN + cadastral number | Ownership verification step (EGKN simulation) |
+| 5 | Fill property form → Submit | NFT minted on Solana + AI verification via AlemLLM |
+| 6 | Go to **Deals** → pick the fresh "created" deal | Pipeline bar shows current stage |
+| 7 | Click **AI Check** | AI risk score appears, deal moves to "AI Approved" or "Blocked" |
+| 8 | Click **Fund Escrow** → **Execute Deal** | Full lifecycle: Created → Approved → Funded → Executed |
+| 9 | Check **Dashboard** → Transaction History | All Solana transactions with Explorer links |
+
+**AI Provider:** Set `AI_PROVIDER=alemllm` in `.env` for real AI. Without backend, app falls back to demo data.
+
+**On-chain proof:**
+- Program: [`8j9MKKmvkYeZw9SUtt7KucShygxcjZHMYpnGoJFUY1MY`](https://explorer.solana.com/address/8j9MKKmvkYeZw9SUtt7KucShygxcjZHMYpnGoJFUY1MY?cluster=devnet)
+- All tokenize/verify/deal transactions visible in Solana Explorer
+
+---
+
 ## 🏆 Hackathon Highlights
 
 | Achievement | Detail |

@@ -10,6 +10,40 @@ import StatusBadge from '../components/StatusBadge';
 import RiskBadge from '../components/RiskBadge';
 import toast from 'react-hot-toast';
 
+const PIPELINE = ['created', 'ai_approved', 'funded', 'completed'] as const;
+const PIPELINE_LABELS: Record<string, string> = {
+  created: 'Created',
+  ai_approved: 'AI Approved',
+  funded: 'Escrow Funded',
+  completed: 'Executed',
+};
+const BLOCKED_STATUSES = ['blocked', 'cancelled', 'under_review'];
+
+function DealPipeline({ status }: { status: string }) {
+  if (BLOCKED_STATUSES.includes(status)) {
+    const color = status === 'blocked' ? 'bg-red-500' : status === 'cancelled' ? 'bg-gray-500' : 'bg-yellow-500';
+    return (
+      <div className="flex items-center gap-1 mb-3">
+        <div className={`h-1.5 flex-1 rounded ${color}`} />
+        <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded ${color}/20 ${color.replace('bg-', 'text-')}`}>{status}</span>
+      </div>
+    );
+  }
+  const idx = PIPELINE.indexOf(status as any);
+  return (
+    <div className="flex items-center gap-1 mb-3">
+      {PIPELINE.map((step, i) => (
+        <div key={step} className="flex items-center flex-1 gap-1">
+          <div className={`h-1.5 flex-1 rounded ${i <= idx ? 'bg-primary-500' : 'bg-gray-800'}`} />
+          {i === PIPELINE.length - 1 && (
+            <span className="text-[10px] text-gray-500 whitespace-nowrap">{PIPELINE_LABELS[step]}</span>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function Deals() {
   const { t } = useTranslation();
   const { publicKey } = useWallet();
@@ -182,6 +216,20 @@ export default function Deals() {
         </motion.form>
       )}
 
+      <div className="flex items-center gap-2 mb-6 p-3 bg-gray-900/50 border border-gray-800 rounded-lg overflow-x-auto">
+        {PIPELINE.map((step, i) => (
+          <div key={step} className="flex items-center gap-2 shrink-0">
+            <div className="w-6 h-6 rounded-full bg-primary-600/20 text-primary-400 flex items-center justify-center text-xs font-bold">{i + 1}</div>
+            <span className="text-xs text-gray-400">{PIPELINE_LABELS[step]}</span>
+            {i < PIPELINE.length - 1 && <div className="w-8 h-px bg-gray-700" />}
+          </div>
+        ))}
+        <div className="ml-auto flex gap-2 shrink-0">
+          <span className="text-[10px] px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/20">Blocked = fraud</span>
+          <span className="text-[10px] px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">Review = manual</span>
+        </div>
+      </div>
+
       {deals.length === 0 ? (
         <div className="text-center py-16">
           <FileText className="w-16 h-16 text-gray-600 mx-auto mb-4" />
@@ -197,6 +245,7 @@ export default function Deals() {
               transition={{ delay: i * 0.05 }}
               className="bg-gray-900 border border-gray-800 rounded-xl p-4"
             >
+              <DealPipeline status={deal.status} />
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
                   <span className="font-mono text-sm text-gray-400">{deal.dealId}</span>

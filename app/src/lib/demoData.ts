@@ -1,3 +1,13 @@
+// Realistic Solana devnet addresses (base58, 44 chars)
+const WALLETS = {
+  seller1: '7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU',
+  seller2: '9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM',
+  fraudSeller: '3Hk7Rz5Kf2qo6P4kNwBYvU8eJmV8cQxST1nGhdR7wXeP',
+  buyer1: '5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1',
+  buyer2: '6YGhk9FiKJWxSTvXHCdqBnLsP2oEPs9yZRNxekYyh8m3',
+  buyer3: 'HN7cABqLq46Es1jh92dQQisAq662SmxELLLsHHe4YWrH',
+};
+
 export const DEMO_PROPERTIES = [
   {
     propertyId: 'prop_almaty_001',
@@ -7,13 +17,13 @@ export const DEMO_PROPERTIES = [
     floor: 5,
     totalFloors: 9,
     cadastralId: '20:01:234567:012',
-    priceLamports: 25_000_000_000,
+    priceLamports: 24_750_000_000,
     propertyType: 'Apartment',
     isVerified: true,
     aiScore: 92,
     fraudFlags: 0,
     isListed: true,
-    owner: 'DemoSeller111111111111111111111111111111111',
+    owner: WALLETS.seller1,
     status: 'verified',
   },
   {
@@ -24,13 +34,13 @@ export const DEMO_PROPERTIES = [
     floor: 12,
     totalFloors: 25,
     cadastralId: '20:02:345678:456',
-    priceLamports: 45_000_000_000,
+    priceLamports: 44_820_000_000,
     propertyType: 'Apartment',
     isVerified: true,
     aiScore: 88,
     fraudFlags: 0,
     isListed: true,
-    owner: 'DemoSeller222222222222222222222222222222222',
+    owner: WALLETS.seller2,
     status: 'verified',
   },
   {
@@ -41,24 +51,36 @@ export const DEMO_PROPERTIES = [
     floor: 1,
     totalFloors: 5,
     cadastralId: '20:01:111222:333',
-    priceLamports: 60_000_000_000,
+    priceLamports: 59_500_000_000,
     propertyType: 'Commercial',
     isVerified: false,
     aiScore: 34,
     fraudFlags: 6,
     isListed: false,
-    owner: 'FraudSeller33333333333333333333333333333333',
+    owner: WALLETS.fraudSeller,
     status: 'pending_verification',
   },
 ];
 
 export const DEMO_DEALS = [
+  // Fresh deal — judges can walk through the full lifecycle
+  {
+    dealId: 'deal_004_new',
+    propertyId: 'prop_almaty_001',
+    seller: WALLETS.seller1,
+    buyer: WALLETS.buyer1,
+    price: 24_750_000_000,
+    status: 'created',
+    aiRiskScore: 0,
+    aiFlags: [],
+    createdAt: Date.now() - 300000, // 5 minutes ago
+  },
   {
     dealId: 'deal_001',
     propertyId: 'prop_almaty_001',
-    seller: 'DemoSeller111111111111111111111111111111111',
-    buyer: 'DemoBuyer1111111111111111111111111111111111',
-    price: 25_000_000_000,
+    seller: WALLETS.seller1,
+    buyer: WALLETS.buyer2,
+    price: 24_750_000_000,
     status: 'completed',
     aiRiskScore: 12,
     aiFlags: [],
@@ -67,9 +89,9 @@ export const DEMO_DEALS = [
   {
     dealId: 'deal_002',
     propertyId: 'prop_astana_002',
-    seller: 'DemoSeller222222222222222222222222222222222',
-    buyer: 'DemoBuyer2222222222222222222222222222222222',
-    price: 44_000_000_000,
+    seller: WALLETS.seller2,
+    buyer: WALLETS.buyer1,
+    price: 43_500_000_000,
     status: 'ai_approved',
     aiRiskScore: 28,
     aiFlags: [],
@@ -78,9 +100,9 @@ export const DEMO_DEALS = [
   {
     dealId: 'deal_003_fraud',
     propertyId: 'prop_almaty_003',
-    seller: 'FraudSeller33333333333333333333333333333333',
-    buyer: 'DemoBuyer3333333333333333333333333333333333',
-    price: 15_000_000_000,
+    seller: WALLETS.fraudSeller,
+    buyer: WALLETS.buyer3,
+    price: 15_200_000_000,
     status: 'blocked',
     aiRiskScore: 91,
     aiFlags: ['DUPLICATE_LISTING', 'PRICE_ANOMALY', 'SUSPICIOUS_SELLER'],
@@ -90,6 +112,6 @@ export const DEMO_DEALS = [
 
 export const DEMO_STATS = {
   totalProperties: 3,
-  totalDeals: 3,
+  totalDeals: 4,
   totalFraudBlocked: 1,
 };
