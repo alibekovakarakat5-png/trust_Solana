@@ -76,14 +76,14 @@ export default function Dashboard() {
       const sig = await initializePlatform();
       toast.success(
         <div>
-          <p className="font-semibold">Platform initialized!</p>
+          <p className="font-semibold">{t('common.platform_initialized')}</p>
           <a
             href={`https://explorer.solana.com/tx/${sig}?cluster=devnet`}
             target="_blank"
             rel="noopener noreferrer"
             className="text-xs text-primary-400 underline"
           >
-            View on Solana Explorer
+            {t('common.view_on_explorer')}
           </a>
         </div>,
         { duration: 8000 }
@@ -94,7 +94,7 @@ export default function Dashboard() {
     } catch (err: any) {
       const msg = err?.message || 'Failed';
       if (msg.includes('already in use')) {
-        toast.error('Platform already initialized on this network');
+        toast.error(t('common.platform_already_init'));
         setPlatformInitialized(true);
         const state = await fetchPlatformState();
         if (state) setOnChainStats(state);
@@ -135,7 +135,7 @@ export default function Dashboard() {
             </span>
             <span className={`text-xs px-3 py-1 rounded-full flex items-center gap-1 ${onChainStats ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20'}`}>
               <Database className="w-3 h-3" />
-              {onChainStats ? 'On-Chain Data' : 'Demo Data'}
+              {onChainStats ? t('common.on_chain_data') : t('common.demo_data')}
             </span>
             <a
               href={`https://explorer.solana.com/address/${PROGRAM_ID}?cluster=devnet`}
@@ -147,7 +147,7 @@ export default function Dashboard() {
             </a>
             {platformInitialized === true && (
               <span className="text-xs px-3 py-1 rounded-full bg-green-500/10 text-green-400 border border-green-500/20 flex items-center gap-1">
-                <CheckCircle className="w-3 h-3" /> Platform Active
+                <CheckCircle className="w-3 h-3" /> {t('common.platform_active')}
               </span>
             )}
           </div>
@@ -248,14 +248,14 @@ export default function Dashboard() {
                 <div key={deal.dealId} className="flex items-center justify-between py-2 border-b border-gray-800 last:border-0">
                   <div>
                     <p className="text-sm font-medium">{deal.dealId}</p>
-                    <p className="text-xs text-gray-500">{deal.status}</p>
+                    <p className="text-xs text-gray-500">{t(`status.${deal.status}`)}</p>
                   </div>
                   <span className={`text-xs px-2 py-1 rounded-full ${
                     deal.status === 'blocked' ? 'bg-red-500/20 text-red-400'
                     : deal.status === 'completed' ? 'bg-green-500/20 text-green-400'
                     : 'bg-yellow-500/20 text-yellow-400'
                   }`}>
-                    {deal.aiRiskScore > 0 ? `${t('deals.risk_score')}: ${deal.aiRiskScore}` : deal.status}
+                    {deal.aiRiskScore > 0 ? `${t('deals.risk_score')}: ${deal.aiRiskScore}` : t(`status.${deal.status}`)}
                   </span>
                 </div>
               ))}

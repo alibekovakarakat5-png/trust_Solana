@@ -37,7 +37,7 @@ export default function TransactionHistory() {
             >
               <div className="flex items-center gap-3 min-w-0">
                 <span className={`text-xs px-2 py-0.5 rounded-full whitespace-nowrap ${TYPE_COLORS[tx.type] || 'bg-gray-700 text-gray-300'}`}>
-                  {tx.type.replace(/_/g, ' ')}
+                  {t(`tx_types.${tx.type}`, tx.type.replace(/_/g, ' '))}
                 </span>
                 <div className="min-w-0">
                   <p className="text-sm text-gray-300 truncate">{tx.description}</p>
@@ -49,7 +49,7 @@ export default function TransactionHistory() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="shrink-0 ml-2 p-2 rounded-lg hover:bg-gray-800 text-primary-400 hover:text-primary-300 transition-colors"
-                title="View on Solana Explorer"
+                title={t('common.view_on_explorer')}
               >
                 <ExternalLink className="w-4 h-4" />
               </a>

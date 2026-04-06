@@ -8,6 +8,13 @@ const WALLETS = {
   buyer3: 'HN7cABqLq46Es1jh92dQQisAq662SmxELLLsHHe4YWrH',
 };
 
+// Property images (Unsplash free license)
+const PROPERTY_IMAGES = {
+  apartment1: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&h=400&fit=crop',
+  apartment2: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&h=400&fit=crop',
+  commercial: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop',
+};
+
 export const DEMO_PROPERTIES = [
   {
     propertyId: 'prop_almaty_001',
@@ -25,6 +32,7 @@ export const DEMO_PROPERTIES = [
     isListed: true,
     owner: WALLETS.seller1,
     status: 'verified',
+    imageUrl: PROPERTY_IMAGES.apartment1,
   },
   {
     propertyId: 'prop_astana_002',
@@ -42,6 +50,7 @@ export const DEMO_PROPERTIES = [
     isListed: true,
     owner: WALLETS.seller2,
     status: 'verified',
+    imageUrl: PROPERTY_IMAGES.apartment2,
   },
   {
     propertyId: 'prop_almaty_003',
@@ -59,6 +68,7 @@ export const DEMO_PROPERTIES = [
     isListed: false,
     owner: WALLETS.fraudSeller,
     status: 'pending_verification',
+    imageUrl: PROPERTY_IMAGES.commercial,
   },
 ];
 

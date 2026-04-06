@@ -177,6 +177,46 @@
     "success": "Success",
     "view_on_explorer": "View on Solana Explorer",
     "connect_wallet": "Connect Wallet",
-    "program_id": "Program ID"
+    "disconnect_wallet": "Disconnect",
+    "program_id": "Program ID",
+    "cancel": "Cancel",
+    "on_chain_data": "On-Chain Data",
+    "demo_data": "Demo Data",
+    "platform_active": "Platform Active",
+    "platform_already_init": "Platform already initialized on this network",
+    "platform_initialized": "Platform initialized!",
+    "nft_minted": "NFT minted on Solana!",
+    "view_tx": "View transaction",
+    "ai_verdict_onchain": "AI verdict recorded on-chain!",
+    "view_oracle_tx": "View oracle transaction",
+    "deal_ai_onchain": "Deal AI verdict recorded on-chain!",
+    "transaction": "Transaction",
+    "mint": "Mint"
+  },
+  "pipeline": {
+    "created": "Created",
+    "ai_approved": "AI Approved",
+    "funded": "Escrow Funded",
+    "completed": "Executed"
+  },
+  "tokenize_extra": {
+    "upload_docs": "Upload property documents",
+    "upload_hint": "Documents will be hashed and stored on-chain",
+    "minting_nft": "Minting NFT on Solana...",
+    "nft_minted_title": "NFT Minted on Solana",
+    "ai_analysis": "AI Analysis"
+  },
+  "deals_extra": {
+    "blocked_fraud": "Blocked = fraud",
+    "review_manual": "Review = manual"
+  },
+  "tx_types": {
+    "initialize_platform": "Initialize",
+    "tokenize_property": "Tokenize",
+    "create_deal": "Create Deal",
+    "ai_verification": "AI Verification",
+    "deal_ai_check": "Deal AI Check",
+    "fund_escrow": "Fund Escrow",
+    "execute_deal": "Execute Deal"
   }
 }

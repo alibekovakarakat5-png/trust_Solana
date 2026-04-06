@@ -177,6 +177,46 @@
     "success": "Сәтті",
     "view_on_explorer": "Solana Explorer-де көру",
     "connect_wallet": "Әмиянды қосу",
-    "program_id": "Program ID"
+    "disconnect_wallet": "Ажырату",
+    "program_id": "Program ID",
+    "cancel": "Бас тарту",
+    "on_chain_data": "On-Chain деректер",
+    "demo_data": "Демо деректер",
+    "platform_active": "Платформа белсенді",
+    "platform_already_init": "Платформа осы желіде инициализацияланған",
+    "platform_initialized": "Платформа инициализацияланды!",
+    "nft_minted": "NFT Solana-да жасалды!",
+    "view_tx": "Транзакцияны көру",
+    "ai_verdict_onchain": "AI шешімі блокчейнге жазылды!",
+    "view_oracle_tx": "Оракул транзакциясын көру",
+    "deal_ai_onchain": "Мәміле AI шешімі блокчейнге жазылды!",
+    "transaction": "Транзакция",
+    "mint": "Mint"
+  },
+  "pipeline": {
+    "created": "Құрылды",
+    "ai_approved": "AI мақұлдады",
+    "funded": "Эскроу төленді",
+    "completed": "Орындалды"
+  },
+  "tokenize_extra": {
+    "upload_docs": "Нысан құжаттарын жүктеңіз",
+    "upload_hint": "Құжаттар хэштеліп блокчейнге сақталады",
+    "minting_nft": "Solana-да NFT жасалуда...",
+    "nft_minted_title": "NFT Solana-да жасалды",
+    "ai_analysis": "AI талдау"
+  },
+  "deals_extra": {
+    "blocked_fraud": "Тоқтатылды = алаяқтық",
+    "review_manual": "Тексеруде = қолмен тексеру"
+  },
+  "tx_types": {
+    "initialize_platform": "Инициализация",
+    "tokenize_property": "Токенизация",
+    "create_deal": "Мәміле құру",
+    "ai_verification": "AI верификация",
+    "deal_ai_check": "Мәміле AI тексеру",
+    "fund_escrow": "Эскроу толтыру",
+    "execute_deal": "Мәмілені орындау"
   }
 }

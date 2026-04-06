@@ -28,7 +28,7 @@ export default function Landing() {
   return (
     <div className="min-h-screen bg-gray-950 text-white overflow-hidden">
       {/* Hero */}
-      <section className="relative pt-20 pb-32 px-4">
+      <section className="relative pt-20 pb-16 px-4">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary-900/40 via-gray-950 to-gray-950" />
         <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary-500/10 rounded-full blur-3xl" />
 
@@ -84,13 +84,14 @@ export default function Landing() {
       </section>
 
       {/* How It Works */}
-      <section className="py-24 px-4 bg-gray-900/50">
+      <section className="py-24 px-4 bg-gray-900/80">
         <div className="max-w-6xl mx-auto">
           <motion.h2
             className="text-3xl md:text-4xl font-bold text-center mb-16"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.5 }}
           >
             {t('landing.how_title')}
           </motion.h2>
@@ -100,10 +101,10 @@ export default function Landing() {
               <motion.div
                 key={i}
                 className="relative group"
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.15 }}
+                viewport={{ once: true, amount: 0.1 }}
+                transition={{ delay: i * 0.1, duration: 0.4 }}
               >
                 {i < 3 && (
                   <div className="hidden md:block absolute top-10 left-full w-full h-0.5 bg-gradient-to-r from-gray-700 to-transparent z-0" />
@@ -129,9 +130,10 @@ export default function Landing() {
         <div className="max-w-6xl mx-auto">
           <motion.h2
             className="text-3xl md:text-4xl font-bold text-center mb-16"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.5 }}
           >
             {t('landing.features_title')}
           </motion.h2>
@@ -141,10 +143,10 @@ export default function Landing() {
               <motion.div
                 key={i}
                 className="p-6 rounded-2xl border border-gray-800 bg-gray-900/50 hover:border-gray-700 transition-all hover:bg-gray-900"
-                initial={{ opacity: 0, x: i % 2 === 0 ? -30 : 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.1 }}
+                transition={{ delay: i * 0.08, duration: 0.4 }}
               >
                 <feat.icon className={`w-10 h-10 ${feat.color} mb-4`} />
                 <h3 className="text-xl font-semibold mb-2">{feat.title}</h3>

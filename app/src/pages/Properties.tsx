@@ -64,13 +64,19 @@ export default function Properties() {
         {properties.map((prop, i) => (
           <motion.div
             key={prop.propertyId}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.05 }}
+            transition={{ duration: 0.3 }}
             className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden hover:border-gray-700 transition-colors"
           >
-            <div className="h-32 bg-gradient-to-br from-primary-900/40 to-gray-900 flex items-center justify-center">
-              <Home className="w-12 h-12 text-primary-400/50" />
+            <div className="h-40 bg-gradient-to-br from-primary-900/40 to-gray-900 overflow-hidden">
+              {prop.imageUrl ? (
+                <img src={prop.imageUrl} alt={prop.address} className="w-full h-full object-cover" loading="lazy" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <Home className="w-12 h-12 text-primary-400/50" />
+                </div>
+              )}
             </div>
             <div className="p-4 space-y-3">
               <div className="flex items-center justify-between">

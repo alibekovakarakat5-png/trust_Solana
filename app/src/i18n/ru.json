@@ -177,6 +177,46 @@
     "success": "Успешно",
     "view_on_explorer": "Посмотреть на Solana Explorer",
     "connect_wallet": "Подключить кошелёк",
-    "program_id": "Program ID"
+    "disconnect_wallet": "Отключить",
+    "program_id": "Program ID",
+    "cancel": "Отмена",
+    "on_chain_data": "On-Chain данные",
+    "demo_data": "Демо данные",
+    "platform_active": "Платформа активна",
+    "platform_already_init": "Платформа уже инициализирована в этой сети",
+    "platform_initialized": "Платформа инициализирована!",
+    "nft_minted": "NFT создан на Solana!",
+    "view_tx": "Смотреть транзакцию",
+    "ai_verdict_onchain": "AI вердикт записан в блокчейн!",
+    "view_oracle_tx": "Смотреть транзакцию оракула",
+    "deal_ai_onchain": "AI вердикт по сделке записан в блокчейн!",
+    "transaction": "Транзакция",
+    "mint": "Mint"
+  },
+  "pipeline": {
+    "created": "Создано",
+    "ai_approved": "AI одобрено",
+    "funded": "Эскроу оплачен",
+    "completed": "Исполнено"
+  },
+  "tokenize_extra": {
+    "upload_docs": "Загрузите документы на объект",
+    "upload_hint": "Документы будут захешированы и сохранены в блокчейне",
+    "minting_nft": "Создание NFT на Solana...",
+    "nft_minted_title": "NFT создан на Solana",
+    "ai_analysis": "AI анализ"
+  },
+  "deals_extra": {
+    "blocked_fraud": "Заблокировано = мошенничество",
+    "review_manual": "На проверке = ручная проверка"
+  },
+  "tx_types": {
+    "initialize_platform": "Инициализация",
+    "tokenize_property": "Токенизация",
+    "create_deal": "Создание сделки",
+    "ai_verification": "AI верификация",
+    "deal_ai_check": "AI проверка сделки",
+    "fund_escrow": "Пополнение эскроу",
+    "execute_deal": "Исполнение сделки"
   }
 }

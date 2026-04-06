@@ -85,14 +85,14 @@ export default function Tokenize() {
 
       toast.success(
         <div>
-          <p className="font-semibold">NFT minted on Solana!</p>
+          <p className="font-semibold">{t('common.nft_minted')}</p>
           <a
             href={`https://explorer.solana.com/tx/${onChainResult.tx}?cluster=devnet`}
             target="_blank"
             rel="noopener noreferrer"
             className="text-xs text-primary-400 underline"
           >
-            View transaction
+            {t('common.view_tx')}
           </a>
         </div>,
         { duration: 8000 }
@@ -134,8 +134,8 @@ export default function Tokenize() {
         });
         toast.success(
           <div>
-            <p className="font-semibold">AI verdict recorded on-chain!</p>
-            <a href={`https://explorer.solana.com/tx/${aiResult.onChainTx}?cluster=devnet`} target="_blank" rel="noopener noreferrer" className="text-xs text-green-400 underline">View oracle transaction</a>
+            <p className="font-semibold">{t('common.ai_verdict_onchain')}</p>
+            <a href={`https://explorer.solana.com/tx/${aiResult.onChainTx}?cluster=devnet`} target="_blank" rel="noopener noreferrer" className="text-xs text-green-400 underline">{t('common.view_oracle_tx')}</a>
           </div>,
           { duration: 8000 }
         );
@@ -333,8 +333,8 @@ export default function Tokenize() {
 
           <div className="border border-dashed border-gray-700 rounded-lg p-8 text-center">
             <Upload className="w-8 h-8 text-gray-500 mx-auto mb-2" />
-            <p className="text-sm text-gray-400">Upload property documents</p>
-            <p className="text-xs text-gray-600 mt-1">Documents will be hashed and stored on-chain</p>
+            <p className="text-sm text-gray-400">{t('tokenize_extra.upload_docs')}</p>
+            <p className="text-xs text-gray-600 mt-1">{t('tokenize_extra.upload_hint')}</p>
           </div>
 
           <button type="submit" disabled={solanaLoading} className="w-full bg-primary-600 hover:bg-primary-700 disabled:opacity-50 text-white font-medium py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
@@ -351,7 +351,7 @@ export default function Tokenize() {
           <p className="text-gray-400 text-sm">{t('tokenize.verifying_desc')}</p>
           {solanaLoading && (
             <p className="text-xs text-green-400 mt-3 flex items-center justify-center gap-1">
-              <Loader2 className="w-3 h-3 animate-spin" /> Minting NFT on Solana...
+              <Loader2 className="w-3 h-3 animate-spin" /> {t('tokenize_extra.minting_nft')}
             </p>
           )}
         </motion.div>
@@ -364,11 +364,11 @@ export default function Tokenize() {
             <div className="border border-green-500/30 bg-green-950/20 rounded-xl p-4">
               <div className="flex items-center gap-2 mb-2">
                 <CheckCircle className="w-5 h-5 text-green-400" />
-                <span className="font-semibold text-green-400">NFT Minted on Solana</span>
+                <span className="font-semibold text-green-400">{t('tokenize_extra.nft_minted_title')}</span>
               </div>
               <div className="space-y-1 text-sm">
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-400">Transaction:</span>
+                  <span className="text-gray-400">{t('common.transaction')}:</span>
                   <a
                     href={`https://explorer.solana.com/tx/${solanaResult.tx}?cluster=devnet`}
                     target="_blank"
@@ -379,7 +379,7 @@ export default function Tokenize() {
                   </a>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-400">Mint:</span>
+                  <span className="text-gray-400">{t('common.mint')}:</span>
                   <a
                     href={`https://explorer.solana.com/address/${solanaResult.mint}?cluster=devnet`}
                     target="_blank"
@@ -417,7 +417,7 @@ export default function Tokenize() {
                 <span className="font-medium">{(result.marketPriceEstimate / 1e9).toFixed(2)} SOL</span>
               </div>
               <div className="pt-2">
-                <span className="text-gray-400 block mb-1">AI Analysis</span>
+                <span className="text-gray-400 block mb-1">{t('tokenize_extra.ai_analysis')}</span>
                 <p className="text-gray-300">{result.fraudDetails}</p>
               </div>
             </div>

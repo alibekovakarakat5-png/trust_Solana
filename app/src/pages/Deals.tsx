@@ -11,21 +11,16 @@ import RiskBadge from '../components/RiskBadge';
 import toast from 'react-hot-toast';
 
 const PIPELINE = ['created', 'ai_approved', 'funded', 'completed'] as const;
-const PIPELINE_LABELS: Record<string, string> = {
-  created: 'Created',
-  ai_approved: 'AI Approved',
-  funded: 'Escrow Funded',
-  completed: 'Executed',
-};
 const BLOCKED_STATUSES = ['blocked', 'cancelled', 'under_review'];
 
 function DealPipeline({ status }: { status: string }) {
+  const { t } = useTranslation();
   if (BLOCKED_STATUSES.includes(status)) {
     const color = status === 'blocked' ? 'bg-red-500' : status === 'cancelled' ? 'bg-gray-500' : 'bg-yellow-500';
     return (
       <div className="flex items-center gap-1 mb-3">
         <div className={`h-1.5 flex-1 rounded ${color}`} />
-        <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded ${color}/20 ${color.replace('bg-', 'text-')}`}>{status}</span>
+        <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded ${color}/20 ${color.replace('bg-', 'text-')}`}>{t(`status.${status}`)}</span>
       </div>
     );
   }
@@ -36,7 +31,7 @@ function DealPipeline({ status }: { status: string }) {
         <div key={step} className="flex items-center flex-1 gap-1">
           <div className={`h-1.5 flex-1 rounded ${i <= idx ? 'bg-primary-500' : 'bg-gray-800'}`} />
           {i === PIPELINE.length - 1 && (
-            <span className="text-[10px] text-gray-500 whitespace-nowrap">{PIPELINE_LABELS[step]}</span>
+            <span className="text-[10px] text-gray-500 whitespace-nowrap">{t(`pipeline.${step}`)}</span>
           )}
         </div>
       ))}
@@ -125,8 +120,8 @@ export default function Deals() {
         });
         toast.success(
           <div>
-            <p className="font-semibold">Deal AI verdict recorded on-chain!</p>
-            <a href={`https://explorer.solana.com/tx/${result.onChainTx}?cluster=devnet`} target="_blank" rel="noopener noreferrer" className="text-xs text-green-400 underline">View oracle transaction</a>
+            <p className="font-semibold">{t('common.deal_ai_onchain')}</p>
+            <a href={`https://explorer.solana.com/tx/${result.onChainTx}?cluster=devnet`} target="_blank" rel="noopener noreferrer" className="text-xs text-green-400 underline">{t('common.view_oracle_tx')}</a>
           </div>,
           { duration: 8000 }
         );
@@ -211,7 +206,7 @@ export default function Deals() {
           </div>
           <div className="flex gap-2">
             <button type="submit" className="bg-primary-600 hover:bg-primary-700 text-white px-6 py-2 rounded-lg text-sm">{t('deals.submit')}</button>
-            <button type="button" onClick={() => setCreating(false)} className="bg-gray-800 hover:bg-gray-700 text-white px-6 py-2 rounded-lg text-sm">Cancel</button>
+            <button type="button" onClick={() => setCreating(false)} className="bg-gray-800 hover:bg-gray-700 text-white px-6 py-2 rounded-lg text-sm">{t('common.cancel')}</button>
           </div>
         </motion.form>
       )}
@@ -220,13 +215,13 @@ export default function Deals() {
         {PIPELINE.map((step, i) => (
           <div key={step} className="flex items-center gap-2 shrink-0">
             <div className="w-6 h-6 rounded-full bg-primary-600/20 text-primary-400 flex items-center justify-center text-xs font-bold">{i + 1}</div>
-            <span className="text-xs text-gray-400">{PIPELINE_LABELS[step]}</span>
+            <span className="text-xs text-gray-400">{t(`pipeline.${step}`)}</span>
             {i < PIPELINE.length - 1 && <div className="w-8 h-px bg-gray-700" />}
           </div>
         ))}
         <div className="ml-auto flex gap-2 shrink-0">
-          <span className="text-[10px] px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/20">Blocked = fraud</span>
-          <span className="text-[10px] px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">Review = manual</span>
+          <span className="text-[10px] px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/20">{t('deals_extra.blocked_fraud')}</span>
+          <span className="text-[10px] px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">{t('deals_extra.review_manual')}</span>
         </div>
       </div>
 
@@ -280,7 +275,7 @@ export default function Deals() {
               {deal.onChainTx && (
                 <div className="mb-3 flex items-center gap-2 text-xs text-green-400">
                   <span className="w-2 h-2 rounded-full bg-green-400 inline-block" />
-                  <span>AI verdict on-chain:</span>
+                  <span>{t('common.ai_verdict_onchain').replace('!', ':')}</span>
                   <a
                     href={`https://explorer.solana.com/tx/${deal.onChainTx}?cluster=devnet`}
                     target="_blank"

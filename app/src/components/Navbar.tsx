@@ -1,7 +1,8 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
-import { Shield, Home, PlusCircle, FileText, BarChart3, Globe, Menu, X } from 'lucide-react';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { useWalletModal } from '@solana/wallet-adapter-react-ui';
+import { Shield, Home, PlusCircle, FileText, BarChart3, Globe, Menu, X, Wallet, LogOut } from 'lucide-react';
 import { useState } from 'react';
 
 const langs = [
@@ -13,8 +14,11 @@ const langs = [
 export default function Navbar() {
   const { pathname } = useLocation();
   const { t, i18n } = useTranslation();
+  const { publicKey, disconnect, connected } = useWallet();
+  const { setVisible } = useWalletModal();
   const [showLangs, setShowLangs] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [showWalletMenu, setShowWalletMenu] = useState(false);
 
   const links = [
     { to: '/dashboard', label: t('nav.dashboard'), icon: BarChart3 },
@@ -78,7 +82,36 @@ export default function Navbar() {
             )}
           </div>
 
-          <WalletMultiButton className="!bg-primary-600 !rounded-lg !h-10 !text-sm" />
+          {connected && publicKey ? (
+            <div className="relative">
+              <button
+                onClick={() => setShowWalletMenu(!showWalletMenu)}
+                className="flex items-center gap-2 px-3 py-2 bg-primary-600/20 border border-primary-500/30 rounded-lg text-sm text-primary-300 hover:bg-primary-600/30 transition-colors"
+              >
+                <Wallet className="w-4 h-4" />
+                {publicKey.toBase58().slice(0, 4)}...{publicKey.toBase58().slice(-4)}
+              </button>
+              {showWalletMenu && (
+                <div className="absolute right-0 top-full mt-1 bg-gray-900 border border-gray-700 rounded-lg overflow-hidden shadow-xl z-50 min-w-[160px]">
+                  <button
+                    onClick={() => { disconnect(); setShowWalletMenu(false); }}
+                    className="flex items-center gap-2 w-full text-left px-4 py-2.5 text-sm text-red-400 hover:bg-gray-800 transition-colors"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    {t('common.disconnect_wallet')}
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <button
+              onClick={() => setVisible(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-500 rounded-lg text-sm text-white font-medium transition-colors"
+            >
+              <Wallet className="w-4 h-4" />
+              {t('common.connect_wallet')}
+            </button>
+          )}
 
           {/* Mobile hamburger */}
           <button
