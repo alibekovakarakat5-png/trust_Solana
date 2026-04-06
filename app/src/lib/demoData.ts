@@ -2,7 +2,9 @@
 const WALLETS = {
   seller1: '7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU',
   seller2: '9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM',
+  seller3: 'BkfMcPzJX5vR8N2qLmA7dYhWs9Ke4GjTp6UxFn3oJqVi',
   fraudSeller: '3Hk7Rz5Kf2qo6P4kNwBYvU8eJmV8cQxST1nGhdR7wXeP',
+  fraudSeller2: 'FrD8kQ5Lm2Nw9YxRjT4vBpH6cXsA7eZuG3iKoM1JnWf',
   buyer1: '5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1',
   buyer2: '6YGhk9FiKJWxSTvXHCdqBnLsP2oEPs9yZRNxekYyh8m3',
   buyer3: 'HN7cABqLq46Es1jh92dQQisAq662SmxELLLsHHe4YWrH',
@@ -12,10 +14,15 @@ const WALLETS = {
 const PROPERTY_IMAGES = {
   apartment1: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&h=400&fit=crop',
   apartment2: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&h=400&fit=crop',
+  apartment3: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&h=400&fit=crop',
+  house: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=400&fit=crop',
   commercial: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop',
+  fraud1: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&h=400&fit=crop',
+  fraud2: 'https://images.unsplash.com/photo-1448630360428-65456659571a?w=600&h=400&fit=crop',
 };
 
 export const DEMO_PROPERTIES = [
+  // === ЧИСТЫЕ ОБЪЕКТЫ ===
   {
     propertyId: 'prop_almaty_001',
     address: 'Almaty, Abay ave. 50, apt 12',
@@ -53,38 +60,85 @@ export const DEMO_PROPERTIES = [
     imageUrl: PROPERTY_IMAGES.apartment2,
   },
   {
+    propertyId: 'prop_astana_005',
+    address: 'Astana, Kabanbay Batyr 42, apt 78',
+    areaSqm: 95,
+    rooms: 3,
+    floor: 15,
+    totalFloors: 22,
+    cadastralId: '20:02:567890:789',
+    priceLamports: 52_000_000_000,
+    propertyType: 'Apartment',
+    isVerified: true,
+    aiScore: 95,
+    fraudFlags: 0,
+    isListed: true,
+    owner: WALLETS.seller3,
+    status: 'verified',
+    imageUrl: PROPERTY_IMAGES.apartment3,
+  },
+  {
+    propertyId: 'prop_almaty_006',
+    address: 'Almaty, Medeu, Kenesary 14',
+    areaSqm: 180,
+    rooms: 5,
+    floor: 1,
+    totalFloors: 2,
+    cadastralId: '20:01:890123:456',
+    priceLamports: 85_000_000_000,
+    propertyType: 'House',
+    isVerified: true,
+    aiScore: 90,
+    fraudFlags: 0,
+    isListed: true,
+    owner: WALLETS.seller1,
+    status: 'verified',
+    imageUrl: PROPERTY_IMAGES.house,
+  },
+
+  // === МОШЕННИЧЕСКИЕ ОБЪЕКТЫ ===
+  {
+    // Двойная продажа — тот же кадастровый номер что и prop_almaty_001
     propertyId: 'prop_almaty_003',
     address: 'Almaty, Tole Bi 99, office 15',
     areaSqm: 120,
     rooms: 4,
     floor: 1,
     totalFloors: 5,
-    cadastralId: '20:01:111222:333',
+    cadastralId: '20:01:234567:012', // ДУБЛИКАТ кадастрового номера!
     priceLamports: 59_500_000_000,
     propertyType: 'Commercial',
     isVerified: false,
     aiScore: 34,
     fraudFlags: 6,
-    isListed: false,
+    isListed: true,
     owner: WALLETS.fraudSeller,
     status: 'pending_verification',
-    imageUrl: PROPERTY_IMAGES.commercial,
+    imageUrl: PROPERTY_IMAGES.fraud1,
+  },
+  {
+    // Быстрая перепродажа + аномально низкая цена
+    propertyId: 'prop_shymkent_004',
+    address: 'Shymkent, Al-Farabi 120, apt 3',
+    areaSqm: 110,
+    rooms: 4,
+    floor: 2,
+    totalFloors: 9,
+    cadastralId: '20:03:444555:666',
+    priceLamports: 8_500_000_000, // Подозрительно дёшево для 110м2
+    propertyType: 'Apartment',
+    isVerified: false,
+    aiScore: 22,
+    fraudFlags: 4,
+    isListed: true,
+    owner: WALLETS.fraudSeller2,
+    status: 'pending_verification',
+    imageUrl: PROPERTY_IMAGES.fraud2,
   },
 ];
 
 export const DEMO_DEALS = [
-  // Fresh deal — judges can walk through the full lifecycle
-  {
-    dealId: 'deal_004_new',
-    propertyId: 'prop_almaty_001',
-    seller: WALLETS.seller1,
-    buyer: WALLETS.buyer1,
-    price: 24_750_000_000,
-    status: 'created',
-    aiRiskScore: 0,
-    aiFlags: [],
-    createdAt: Date.now() - 300000, // 5 minutes ago
-  },
+  // Успешная сделка
   {
     dealId: 'deal_001',
     propertyId: 'prop_almaty_001',
@@ -96,6 +150,7 @@ export const DEMO_DEALS = [
     aiFlags: [],
     createdAt: Date.now() - 86400000 * 3,
   },
+  // AI одобрена
   {
     dealId: 'deal_002',
     propertyId: 'prop_astana_002',
@@ -107,6 +162,7 @@ export const DEMO_DEALS = [
     aiFlags: [],
     createdAt: Date.now() - 86400000,
   },
+  // ЗАБЛОКИРОВАНА — двойная продажа
   {
     dealId: 'deal_003_fraud',
     propertyId: 'prop_almaty_003',
@@ -118,10 +174,22 @@ export const DEMO_DEALS = [
     aiFlags: ['DUPLICATE_LISTING', 'PRICE_ANOMALY', 'SUSPICIOUS_SELLER'],
     createdAt: Date.now() - 3600000,
   },
+  // ЗАБЛОКИРОВАНА — быстрая перепродажа
+  {
+    dealId: 'deal_005_rapid',
+    propertyId: 'prop_shymkent_004',
+    seller: WALLETS.fraudSeller2,
+    buyer: WALLETS.buyer1,
+    price: 8_500_000_000,
+    status: 'blocked',
+    aiRiskScore: 87,
+    aiFlags: ['RAPID_RESALE', 'PRICE_ANOMALY', 'DOCUMENT_ISSUES'],
+    createdAt: Date.now() - 7200000,
+  },
 ];
 
 export const DEMO_STATS = {
-  totalProperties: 3,
+  totalProperties: 6,
   totalDeals: 4,
-  totalFraudBlocked: 1,
+  totalFraudBlocked: 2,
 };

@@ -41,7 +41,9 @@
     "feat_frac_desc": "Invest in real estate from 1 SOL. Earn rental income proportional to your share.",
     "deployed": "Contract deployed on Solana Devnet",
     "deployed_desc": "Verify yourself on Solana Explorer",
-    "footer": "TrustEstate — Decentrathon 5.0 | Solana Hackathon Kazakhstan"
+    "footer": "TrustEstate — Decentrathon 5.0 | Solana Hackathon Kazakhstan",
+    "try_title": "Try It Yourself",
+    "try_desc": "Everything is live on Solana Devnet. Verify it now."
   },
   "dashboard": {
     "title": "Platform Overview",
@@ -209,6 +211,17 @@
   "deals_extra": {
     "blocked_fraud": "Blocked = fraud",
     "review_manual": "Review = manual"
+  },
+  "profile": {
+    "my_profile": "My Profile",
+    "seller_profile": "Seller Profile",
+    "properties": "Properties",
+    "verified": "Verified",
+    "deals": "Deals",
+    "successful": "successful",
+    "fraud_flags": "Risk Flags",
+    "warning": "Suspicious Seller",
+    "warning_desc": "AI detected fraud indicators for this seller. Transaction is not recommended."
   },
   "tx_types": {
     "initialize_platform": "Initialize",

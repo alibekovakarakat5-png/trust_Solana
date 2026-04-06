@@ -41,7 +41,9 @@
     "feat_frac_desc": "Инвестируйте в недвижимость от 1 SOL. Получайте доход от аренды пропорционально доле.",
     "deployed": "Контракт развёрнут на Solana Devnet",
     "deployed_desc": "Проверьте сами на Solana Explorer",
-    "footer": "TrustEstate — Decentrathon 5.0 | Solana Hackathon Kazakhstan"
+    "footer": "TrustEstate — Decentrathon 5.0 | Solana Hackathon Kazakhstan",
+    "try_title": "Попробуйте сами",
+    "try_desc": "Всё работает на Solana Devnet. Проверьте прямо сейчас."
   },
   "dashboard": {
     "title": "Обзор платформы",
@@ -209,6 +211,17 @@
   "deals_extra": {
     "blocked_fraud": "Заблокировано = мошенничество",
     "review_manual": "На проверке = ручная проверка"
+  },
+  "profile": {
+    "my_profile": "Мой профиль",
+    "seller_profile": "Профиль продавца",
+    "properties": "Объекты",
+    "verified": "Верифицировано",
+    "deals": "Сделки",
+    "successful": "успешных",
+    "fraud_flags": "Флаги риска",
+    "warning": "Подозрительный продавец",
+    "warning_desc": "AI обнаружил мошеннические признаки у этого продавца. Не рекомендуется совершать сделку."
   },
   "tx_types": {
     "initialize_platform": "Инициализация",

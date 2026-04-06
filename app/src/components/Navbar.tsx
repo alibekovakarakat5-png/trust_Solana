@@ -2,8 +2,9 @@ import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
-import { Shield, Home, PlusCircle, FileText, BarChart3, Globe, Menu, X, Wallet, LogOut } from 'lucide-react';
+import { Shield, Home, PlusCircle, FileText, BarChart3, Globe, Menu, X, Wallet, LogOut, User } from 'lucide-react';
 import { useState } from 'react';
+import ProfileCard from './ProfileCard';
 
 const langs = [
   { code: 'ru', label: 'RU' },
@@ -19,6 +20,7 @@ export default function Navbar() {
   const [showLangs, setShowLangs] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [showWalletMenu, setShowWalletMenu] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
 
   const links = [
     { to: '/dashboard', label: t('nav.dashboard'), icon: BarChart3 },
@@ -92,15 +94,26 @@ export default function Navbar() {
                 {publicKey.toBase58().slice(0, 4)}...{publicKey.toBase58().slice(-4)}
               </button>
               {showWalletMenu && (
-                <div className="absolute right-0 top-full mt-1 bg-gray-900 border border-gray-700 rounded-lg overflow-hidden shadow-xl z-50 min-w-[160px]">
+                <div className="absolute right-0 top-full mt-1 bg-gray-900 border border-gray-700 rounded-lg overflow-hidden shadow-xl z-50 min-w-[180px]">
+                  <button
+                    onClick={() => { setShowProfile(true); setShowWalletMenu(false); }}
+                    className="flex items-center gap-2 w-full text-left px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800 transition-colors"
+                  >
+                    <User className="w-4 h-4" />
+                    {t('profile.my_profile')}
+                  </button>
                   <button
                     onClick={() => { disconnect(); setShowWalletMenu(false); }}
-                    className="flex items-center gap-2 w-full text-left px-4 py-2.5 text-sm text-red-400 hover:bg-gray-800 transition-colors"
+                    className="flex items-center gap-2 w-full text-left px-4 py-2.5 text-sm text-red-400 hover:bg-gray-800 transition-colors border-t border-gray-800"
                   >
                     <LogOut className="w-4 h-4" />
                     {t('common.disconnect_wallet')}
                   </button>
                 </div>
+              )}
+
+              {showProfile && publicKey && (
+                <ProfileCard address={publicKey.toBase58()} onClose={() => setShowProfile(false)} isSelf />
               )}
             </div>
           ) : (

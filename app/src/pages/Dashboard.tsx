@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Shield, Home, FileText, AlertTriangle, TrendingUp, CheckCircle, ExternalLink, Loader2, Wifi, WifiOff, Brain, Database } from 'lucide-react';
+import { Shield, Home, FileText, AlertTriangle, TrendingUp, CheckCircle, ExternalLink, Loader2, Wifi, WifiOff, Brain, Database, BarChart3 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/useStore';
 import { useTrustEstate } from '../hooks/useTrustEstate';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -10,12 +11,14 @@ import toast from 'react-hot-toast';
 
 const PROGRAM_ID = '8j9MKKmvkYeZw9SUtt7KucShygxcjZHMYpnGoJFUY1MY';
 
-function StatCard({ icon: Icon, label, value, color, onChain }: { icon: any; label: string; value: number; color: string; onChain?: boolean }) {
+function StatCard({ icon: Icon, label, value, color, onChain, to }: { icon: any; label: string; value: number; color: string; onChain?: boolean; to?: string }) {
+  const navigate = useNavigate();
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-gray-900 border border-gray-800 rounded-xl p-6"
+      onClick={() => to && navigate(to)}
+      className={`bg-gray-900 border border-gray-800 rounded-xl p-6 ${to ? 'cursor-pointer hover:border-gray-600 hover:bg-gray-800/50 transition-all' : ''}`}
     >
       <div className="flex items-center gap-3 mb-3">
         <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${color}`}>
@@ -181,6 +184,7 @@ export default function Dashboard() {
           value={onChainStats?.totalProperties ?? stats.totalProperties}
           color="bg-primary-600/20 text-primary-400"
           onChain={!!onChainStats}
+          to="/properties"
         />
         <StatCard
           icon={FileText}
@@ -188,6 +192,7 @@ export default function Dashboard() {
           value={onChainStats?.totalDeals ?? stats.totalDeals}
           color="bg-blue-600/20 text-blue-400"
           onChain={!!onChainStats}
+          to="/deals"
         />
         <StatCard
           icon={AlertTriangle}
@@ -195,14 +200,48 @@ export default function Dashboard() {
           value={onChainStats?.totalFraudBlocked ?? stats.totalFraudBlocked}
           color="bg-red-600/20 text-red-400"
           onChain={!!onChainStats}
+          to="/deals"
         />
         <StatCard
           icon={CheckCircle}
           label={t('dashboard.verified')}
           value={verifiedCount}
           color="bg-green-600/20 text-green-400"
+          to="/properties"
         />
       </div>
+
+      {/* AI Analytics */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-gradient-to-r from-red-950/30 via-gray-900 to-green-950/30 border border-gray-800 rounded-xl p-6 mb-6"
+      >
+        <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+          <Brain className="w-5 h-5 text-purple-400" />
+          AI Fraud Analytics
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="bg-gray-950/50 rounded-lg p-4 border border-red-500/10">
+            <div className="text-2xl font-bold text-red-400">{stats.totalFraudBlocked}</div>
+            <div className="text-xs text-gray-500 mt-1">{t('dashboard.activity_blocked')}</div>
+          </div>
+          <div className="bg-gray-950/50 rounded-lg p-4 border border-green-500/10">
+            <div className="text-2xl font-bold text-green-400">{deals.filter(d => d.status === 'completed').length}</div>
+            <div className="text-xs text-gray-500 mt-1">{t('dashboard.activity_completed')}</div>
+          </div>
+          <div className="bg-gray-950/50 rounded-lg p-4 border border-purple-500/10">
+            <div className="text-2xl font-bold text-purple-400">{verifiedCount}</div>
+            <div className="text-xs text-gray-500 mt-1">{t('dashboard.activity_verified')}</div>
+          </div>
+          <div className="bg-gray-950/50 rounded-lg p-4 border border-yellow-500/10">
+            <div className="text-2xl font-bold text-yellow-400">
+              {deals.length > 0 ? Math.round(deals.reduce((sum, d) => sum + (d.aiRiskScore || 0), 0) / deals.length) : 0}
+            </div>
+            <div className="text-xs text-gray-500 mt-1">Avg. Risk Score</div>
+          </div>
+        </div>
+      </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <motion.div

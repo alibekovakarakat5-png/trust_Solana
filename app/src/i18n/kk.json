@@ -41,7 +41,9 @@
     "feat_frac_desc": "1 SOL-дан бастап жылжымайтын мүлікке инвестиция салыңыз. Жалдау кірісін үлесіңізге сәйкес алыңыз.",
     "deployed": "Контракт Solana Devnet-ке орнатылды",
     "deployed_desc": "Solana Explorer-де тексеріңіз",
-    "footer": "TrustEstate — Decentrathon 5.0 | Solana Hackathon Kazakhstan"
+    "footer": "TrustEstate — Decentrathon 5.0 | Solana Hackathon Kazakhstan",
+    "try_title": "Өзіңіз тексеріңіз",
+    "try_desc": "Бәрі Solana Devnet-те жұмыс істейді. Қазір тексеріңіз."
   },
   "dashboard": {
     "title": "Платформаға шолу",
@@ -209,6 +211,17 @@
   "deals_extra": {
     "blocked_fraud": "Тоқтатылды = алаяқтық",
     "review_manual": "Тексеруде = қолмен тексеру"
+  },
+  "profile": {
+    "my_profile": "Менің профилім",
+    "seller_profile": "Сатушы профилі",
+    "properties": "Нысандар",
+    "verified": "Верификацияланған",
+    "deals": "Мәмілелер",
+    "successful": "сәтті",
+    "fraud_flags": "Тәуекел белгілері",
+    "warning": "Күдікті сатушы",
+    "warning_desc": "AI бұл сатушыда алаяқтық белгілерін анықтады. Мәміле жасау ұсынылмайды."
   },
   "tx_types": {
     "initialize_platform": "Инициализация",
