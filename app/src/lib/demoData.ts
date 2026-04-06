@@ -18,7 +18,7 @@ const PROPERTY_IMAGES = {
   house: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=400&fit=crop',
   commercial: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop',
   fraud1: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&h=400&fit=crop',
-  fraud2: 'https://images.unsplash.com/photo-1448630360428-65456659571a?w=600&h=400&fit=crop',
+  fraud2: 'https://images.unsplash.com/photo-1460317442991-0ec209397118?w=600&h=400&fit=crop',
 };
 
 export const DEMO_PROPERTIES = [

@@ -67,7 +67,8 @@ export default function Properties() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
-            className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden hover:border-gray-700 transition-colors"
+            className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden hover:border-primary-500/30 transition-colors cursor-pointer"
+            onClick={() => navigate(`/properties/${prop.propertyId}`)}
           >
             <div className="h-40 bg-gradient-to-br from-primary-900/40 to-gray-900 overflow-hidden">
               {prop.imageUrl ? (

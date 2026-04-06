@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import Properties from './pages/Properties';
 import Tokenize from './pages/Tokenize';
 import Deals from './pages/Deals';
+import PropertyDetail from './pages/PropertyDetail';
 import { Toaster } from 'react-hot-toast';
 import { useStore } from './store/useStore';
 import { DEMO_PROPERTIES, DEMO_DEALS, DEMO_STATS } from './lib/demoData';
@@ -30,6 +31,7 @@ export default function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/properties" element={<Properties />} />
+        <Route path="/properties/:id" element={<PropertyDetail />} />
         <Route path="/tokenize" element={<Tokenize />} />
         <Route path="/deals" element={<Deals />} />
       </Routes>
