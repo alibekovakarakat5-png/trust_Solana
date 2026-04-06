@@ -195,8 +195,8 @@
   },
   "pipeline": {
     "created": "Создано",
-    "ai_approved": "AI одобрено",
     "funded": "Эскроу оплачен",
+    "ai_approved": "AI одобрено",
     "completed": "Исполнено"
   },
   "tokenize_extra": {

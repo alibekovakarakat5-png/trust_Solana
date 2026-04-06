@@ -10,8 +10,9 @@ import StatusBadge from '../components/StatusBadge';
 import RiskBadge from '../components/RiskBadge';
 import toast from 'react-hot-toast';
 
-const PIPELINE = ['created', 'ai_approved', 'funded', 'completed'] as const;
-const BLOCKED_STATUSES = ['blocked', 'cancelled', 'under_review'];
+// Matches on-chain DealStatus flow: Created → Funded → AwaitingAI → AiApproved → Completed
+const PIPELINE = ['created', 'funded', 'ai_approved', 'completed'] as const;
+const BLOCKED_STATUSES = ['blocked', 'cancelled', 'under_review', 'awaiting_ai'];
 
 function DealPipeline({ status }: { status: string }) {
   const { t } = useTranslation();
@@ -289,30 +290,8 @@ export default function Deals() {
 
               {/* Escrow lifecycle buttons */}
               <div className="flex gap-2 flex-wrap">
-                {/* created: AI Check + Cancel */}
+                {/* created: Fund Escrow + Cancel (matches contract: Created → fund_escrow → Funded) */}
                 {deal.status === 'created' && (
-                  <>
-                    <button
-                      onClick={() => runAiCheck(deal.dealId)}
-                      disabled={processing === deal.dealId}
-                      className="bg-primary-600 hover:bg-primary-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2"
-                    >
-                      {processing === deal.dealId ? <Loader2 className="w-4 h-4 animate-spin" /> : <Shield className="w-4 h-4" />}
-                      {processing === deal.dealId ? t('deals.checking') : t('deals.check_ai')}
-                    </button>
-                    <button
-                      onClick={() => handleStatusChange(deal.dealId, 'cancelled', 'deals.cancelled_success')}
-                      disabled={processing === deal.dealId}
-                      className="bg-gray-700 hover:bg-gray-600 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2"
-                    >
-                      <XCircle className="w-4 h-4" />
-                      {t('deals.cancel_deal')}
-                    </button>
-                  </>
-                )}
-
-                {/* ai_approved: Fund Escrow + Execute Deal + Cancel */}
-                {deal.status === 'ai_approved' && (
                   <>
                     <button
                       onClick={() => handleStatusChange(deal.dealId, 'funded', 'deals.funded_success')}
@@ -323,12 +302,26 @@ export default function Deals() {
                       {t('deals.fund_escrow')}
                     </button>
                     <button
-                      onClick={() => handleStatusChange(deal.dealId, 'completed', 'deals.executed_success')}
+                      onClick={() => handleStatusChange(deal.dealId, 'cancelled', 'deals.cancelled_success')}
                       disabled={processing === deal.dealId}
-                      className="bg-green-600 hover:bg-green-500 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2"
+                      className="bg-gray-700 hover:bg-gray-600 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2"
                     >
-                      <Zap className="w-4 h-4" />
-                      {t('deals.execute_deal')}
+                      <XCircle className="w-4 h-4" />
+                      {t('deals.cancel_deal')}
+                    </button>
+                  </>
+                )}
+
+                {/* funded: Confirm + AI Check (matches contract: Funded → confirm_deal → AwaitingAI → AI check) */}
+                {deal.status === 'funded' && (
+                  <>
+                    <button
+                      onClick={() => handleConfirmDeal(deal.dealId)}
+                      disabled={processing === deal.dealId}
+                      className="bg-primary-600 hover:bg-primary-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2"
+                    >
+                      {processing === deal.dealId ? <Loader2 className="w-4 h-4 animate-spin" /> : <Shield className="w-4 h-4" />}
+                      {processing === deal.dealId ? t('deals.checking') : t('deals.confirm_deal')}
                     </button>
                     <button
                       onClick={() => handleStatusChange(deal.dealId, 'cancelled', 'deals.cancelled_success')}
@@ -341,16 +334,16 @@ export default function Deals() {
                   </>
                 )}
 
-                {/* funded: Confirm Deal + Cancel */}
-                {deal.status === 'funded' && (
+                {/* ai_approved: Execute Deal + Cancel (matches contract: AiApproved → execute_deal → Completed) */}
+                {deal.status === 'ai_approved' && (
                   <>
                     <button
-                      onClick={() => handleConfirmDeal(deal.dealId)}
+                      onClick={() => handleStatusChange(deal.dealId, 'completed', 'deals.executed_success')}
                       disabled={processing === deal.dealId}
                       className="bg-green-600 hover:bg-green-500 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2"
                     >
-                      {processing === deal.dealId ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCheck className="w-4 h-4" />}
-                      {t('deals.confirm_deal')}
+                      <Zap className="w-4 h-4" />
+                      {t('deals.execute_deal')}
                     </button>
                     <button
                       onClick={() => handleStatusChange(deal.dealId, 'cancelled', 'deals.cancelled_success')}

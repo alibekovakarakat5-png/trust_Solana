@@ -195,8 +195,8 @@
   },
   "pipeline": {
     "created": "Created",
-    "ai_approved": "AI Approved",
     "funded": "Escrow Funded",
+    "ai_approved": "AI Approved",
     "completed": "Executed"
   },
   "tokenize_extra": {

@@ -9,6 +9,7 @@ export const WalletContextProvider: FC<{ children: ReactNode }> = ({ children })
   const wallets = useMemo(() => [new PhantomWalletAdapter(), new SolflareWalletAdapter()], []);
 
   return (
+    // @ts-expect-error wallet-adapter React type mismatch with React 18
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect>
         <WalletModalProvider>

@@ -16,6 +16,7 @@ interface Property {
   isListed: boolean;
   owner: string;
   status: string;
+  imageUrl?: string;
   isFractionalized?: boolean;
   totalShares?: number;
   pricePerShare?: number;
