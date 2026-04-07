@@ -26,9 +26,10 @@
 > **How to verify:**
 > 1. Connect Phantom on **Devnet** → open the app
 > 2. [Click Explorer link](https://explorer.solana.com/address/8j9MKKmvkYeZw9SUtt7KucShygxcjZHMYpnGoJFUY1MY?cluster=devnet) → confirm contract is deployed
-> 3. **Happy path:** Open any Almaty/Astana property → Buy → watch deal pipeline reach `Completed`
-> 4. **Fraud path:** Open Shymkent property (AI Score: 22) → deal is automatically `Blocked` by AI
-> 5. Dashboard → AI Fraud Analytics → see 2 blocked fraudulent deals
+> 3. **Happy path:** Open any Almaty/Astana property → Create deal → Fund Escrow → watch deal pipeline reach `Completed`
+> 4. **Fraud path (live demo!):** Go to Deals → find `deal_fraud_demo` (red border) → click **Confirm Deal** → watch AI block it in real-time with risk score 91/100
+> 5. **Fractional ownership:** Dashboard → Fractional Ownership widget → buy 40% of an Almaty apartment → see SPL token ownership
+> 6. **Tokenize with demo:** Go to Tokenize → click ⚡ Demo buttons to auto-fill → submit property on-chain
 
 > **Known scope (MVP):** Demo runs on Devnet with pre-loaded demo data. AI backend uses AlemLLM. Mainnet deployment and cadastral registry integration are Phase 2.
 
@@ -234,14 +235,15 @@ npm install && npm run dev   # → http://localhost:5175
 | Step | Action | What to look for |
 |------|--------|-----------------|
 | 1 | Open http://localhost:5175 | Landing page with program ID + Solana Explorer link |
-| 2 | Connect Phantom wallet (Devnet) | Dashboard loads, badges show data source + AI provider |
-| 3 | Click "Initialize Platform" (if first run) | Transaction on Solana Explorer, stats switch to "On-Chain Data" |
-| 4 | Go to **Tokenize** → fill IIN + cadastral number | Ownership verification step (EGKN simulation) |
-| 5 | Fill property form → Submit | NFT minted on Solana + AI verification via AlemLLM |
-| 6 | Go to **Deals** → pick the fresh "created" deal | Pipeline bar shows current stage |
-| 7 | Click **AI Check** | AI risk score appears, deal moves to "AI Approved" or "Blocked" |
-| 8 | Click **Fund Escrow** → **Execute Deal** | Full lifecycle: Created → Approved → Funded → Executed |
-| 9 | Check **Dashboard** → Transaction History | All Solana transactions with Explorer links |
+| 2 | Connect Phantom wallet (Devnet) | Dashboard loads with stats and fractional ownership widget |
+| 3 | Click "Initialize Platform" (if first run) | Transaction on Solana Explorer |
+| 4 | Go to **Tokenize** → click ⚡ Demo buttons | Auto-fills IIN, cadastral ID, and property form |
+| 5 | Submit property | NFT minted on Solana + AI verification |
+| 6 | Go to **Deals** → find `deal_fraud_demo` (red border) | 🚨 Click **Confirm Deal** → watch AI block fraud live! |
+| 7 | See the result | Risk 91/100, flags: DUPLICATE_LISTING, PRICE_ANOMALY, SUSPICIOUS_SELLER |
+| 8 | Go to **Deals** → pick a clean deal → **Fund Escrow** → **Execute** | Full lifecycle: Created → Funded → AI Approved → Completed |
+| 9 | **Dashboard** → Fractional Ownership widget | Buy 40% of apartment → see ownership bar update |
+| 10 | Check **Dashboard** → Transaction History | All Solana transactions with Explorer links |
 
 **AI Provider:** Set `AI_PROVIDER=alemllm` in `.env` for real AI. Without backend, app falls back to demo data.
 
@@ -255,13 +257,15 @@ npm install && npm run dev   # → http://localhost:5175
 
 | Achievement | Detail |
 |------------|--------|
-| ✅ Smart contract deployed | Solana Devnet · `8j9MKKmv...` |
+| ✅ Smart contract deployed | Solana Devnet · `8j9MKKmv...` · Slot 452,280,231 |
 | ✅ 12 on-chain instructions | Full real estate lifecycle |
 | ✅ AI fraud detection | AlemLLM — Kazakhstan's national AI |
 | ✅ Real Solana transactions | initialize_platform + tokenize_property from UI |
 | ✅ RU/KZ/EN localization | Native Kazakhstan market support |
-| ✅ Fractional ownership | SPL token shares + rental distribution |
+| ✅ Fractional ownership | SPL token shares + rental distribution + dashboard widget |
 | ✅ Atomic escrow | NFT ↔ SOL in single transaction |
+| ✅ Live fraud demo | `deal_fraud_demo` — click Confirm → AI blocks in real-time |
+| ✅ Demo auto-fill | ⚡ Demo buttons on Tokenize page for quick judge walkthrough |
 
 ---
 
