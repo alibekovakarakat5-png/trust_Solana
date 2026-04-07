@@ -119,7 +119,17 @@
     "chk3_fail": "3 sales in 6 months",
     "chk4_warn": "Hash mismatch detected",
     "chk5_fail": "4 blocked deals on record",
-    "chk6_fail": "Statistical outlier"
+    "chk6_fail": "Statistical outlier",
+    "frac_deep_title": "Fractional Ownership",
+    "frac_deep_sub": "Expensive properties can be split into SPL token shares on Solana. Each investor earns proportional rental income.",
+    "frac_share": "share",
+    "frac_rental_income": "Rental Income",
+    "frac_on_chain": "Implemented in smart contract",
+    "frac_buy_modal_title": "Buy Shares",
+    "frac_shares_to_buy": "Number of shares",
+    "frac_total_price": "Total",
+    "frac_confirm": "Confirm Purchase",
+    "frac_success": "Shares purchased successfully!"
   },
   "dashboard": {
     "title": "Platform Overview",
@@ -161,7 +171,8 @@
     "fractionalized": "Fractionalized",
     "buy_shares": "Buy Shares",
     "shares_available": "shares available",
-    "rental_income": "Rental Income"
+    "rental_income": "Rental Income",
+    "buy_shares_modal": "Buy Shares"
   },
   "tokenize": {
     "title": "Tokenize Property",

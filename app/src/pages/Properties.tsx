@@ -17,6 +17,20 @@ export default function Properties() {
   const [fractionalizing, setFractionalizing] = useState<string | null>(null);
   const [totalShares, setTotalShares] = useState('');
   const [pricePerShare, setPricePerShare] = useState('');
+  const [buyingShares, setBuyingShares] = useState<string | null>(null);
+  const [sharesToBuy, setSharesToBuy] = useState('1');
+
+  function handleBuyShares(prop: typeof properties[0], e: React.FormEvent) {
+    e.preventDefault();
+    const count = Number(sharesToBuy);
+    if (count <= 0 || !prop.availableShares || count > prop.availableShares) return;
+    updateProperty(prop.propertyId, {
+      availableShares: prop.availableShares - count,
+    });
+    toast.success(t('landing.frac_success'));
+    setBuyingShares(null);
+    setSharesToBuy('1');
+  }
 
   function handleFractionalize(propertyId: string, e: React.FormEvent) {
     e.preventDefault();
@@ -127,15 +141,49 @@ export default function Properties() {
                 </button>
               )}
 
-              {/* Buy Shares button for non-owned fractionalized properties */}
+              {/* Buy Shares button / modal for non-owned fractionalized properties */}
               {prop.isFractionalized && publicKey && prop.owner !== publicKey.toBase58() && (
-                <button
-                  onClick={() => toast('Coming soon in Phase 2', { icon: '🔜' })}
-                  className="w-full mt-2 bg-purple-600 hover:bg-purple-500 text-white font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
-                >
-                  <ShoppingBag className="w-4 h-4" />
-                  {t('properties.buy_shares')}
-                </button>
+                <>
+                  {buyingShares === prop.propertyId ? (
+                    <motion.form
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      onSubmit={(e) => handleBuyShares(prop, e)}
+                      className="mt-2 bg-gray-800 border border-purple-500/30 rounded-lg p-3 space-y-2"
+                    >
+                      <h4 className="text-xs font-semibold text-purple-400">{t('landing.frac_buy_modal_title')}</h4>
+                      <div className="flex items-center justify-between text-xs text-gray-400 mb-1">
+                        <span>{t('properties.shares_available')}: {prop.availableShares}/{prop.totalShares}</span>
+                        <span>{prop.pricePerShare} SOL/{t('landing.frac_share')}</span>
+                      </div>
+                      <div>
+                        <label className="block text-xs text-gray-400 mb-1">{t('landing.frac_shares_to_buy')}</label>
+                        <input
+                          type="number" min="1" max={prop.availableShares} step="1"
+                          value={sharesToBuy}
+                          onChange={e => setSharesToBuy(e.target.value)}
+                          className="w-full bg-gray-900 border border-gray-700 rounded px-2 py-1 text-sm text-white outline-none"
+                          required
+                        />
+                      </div>
+                      <div className="text-xs text-gray-400">
+                        {t('landing.frac_total_price')}: <span className="text-white font-bold">{((prop.pricePerShare || 0) * Number(sharesToBuy)).toFixed(3)} SOL</span>
+                      </div>
+                      <div className="flex gap-2">
+                        <button type="submit" className="bg-purple-600 hover:bg-purple-500 text-white px-3 py-1 rounded text-xs">{t('landing.frac_confirm')}</button>
+                        <button type="button" onClick={() => { setBuyingShares(null); setSharesToBuy('1'); }} className="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded text-xs">{t('deals.cancel_deal')}</button>
+                      </div>
+                    </motion.form>
+                  ) : (
+                    <button
+                      onClick={() => setBuyingShares(prop.propertyId)}
+                      className="w-full mt-2 bg-purple-600 hover:bg-purple-500 text-white font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
+                    >
+                      <ShoppingBag className="w-4 h-4" />
+                      {t('properties.buy_shares')}
+                    </button>
+                  )}
+                </>
               )}
 
               {/* Fractionalize button for owned verified properties */}

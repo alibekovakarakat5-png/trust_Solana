@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Shield, Brain, Zap, Lock, ExternalLink, CheckCircle,
   Globe, XCircle, AlertTriangle, RotateCcw,
-  Database, Eye, Cpu, TrendingDown, TrendingUp,
+  Database, Eye, Cpu, TrendingDown, TrendingUp, Layers, Users,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -398,7 +398,7 @@ export default function Landing() {
             <h2 className="text-3xl md:text-4xl font-bold">{t('landing.deep_title')}</h2>
           </motion.div>
 
-          <div className="grid lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 gap-6">
 
             {/* AI Card */}
             <motion.div
@@ -522,6 +522,54 @@ export default function Landing() {
                   : '🔒 Funds locked in smart contract'}
               </div>
             </motion.div>
+
+            {/* Fractional Ownership Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="bg-gray-900 border border-indigo-500/20 rounded-2xl p-6 flex flex-col"
+            >
+              <div className="w-12 h-12 rounded-xl bg-indigo-500/20 flex items-center justify-center mb-4">
+                <Layers className="w-6 h-6 text-indigo-400" />
+              </div>
+              <h3 className="text-xl font-bold mb-2">{t('landing.frac_deep_title')}</h3>
+              <p className="text-sm text-gray-400 mb-5 leading-relaxed">{t('landing.frac_deep_sub')}</p>
+
+              {/* Animated share visualization */}
+              <div className="flex-1 bg-gray-950 rounded-xl p-4 border border-gray-800">
+                <div className="text-xs text-gray-500 mb-3 font-mono uppercase tracking-wider">Almaty, Abay 50 · 100 SOL</div>
+                <div className="grid grid-cols-4 gap-1.5 mb-4">
+                  {[
+                    { label: 'Investor A', pct: '25%', color: 'bg-indigo-500/30 border-indigo-500/40 text-indigo-300' },
+                    { label: 'Investor B', pct: '25%', color: 'bg-purple-500/30 border-purple-500/40 text-purple-300' },
+                    { label: 'Investor C', pct: '25%', color: 'bg-cyan-500/30 border-cyan-500/40 text-cyan-300' },
+                    { label: 'Investor D', pct: '25%', color: 'bg-pink-500/30 border-pink-500/40 text-pink-300' },
+                  ].map((inv, i) => (
+                    <div key={i} className={`border rounded-lg p-2 text-center ${inv.color}`}>
+                      <div className="text-[10px] font-bold">{inv.pct}</div>
+                      <div className="text-[9px] opacity-70 mt-0.5">{inv.label}</div>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-1.5 text-green-400">
+                    <TrendingUp className="w-3 h-3" />
+                    <span>{t('landing.frac_rental_income')}: 2.4 SOL/мес</span>
+                  </div>
+                  <div className="flex items-center gap-1 text-xs text-gray-500">
+                    <span>÷ 4 =</span>
+                    <span className="text-green-300 font-mono">0.6 SOL</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-4 flex items-center gap-2 px-3 py-2 bg-indigo-500/10 border border-indigo-500/20 rounded-lg">
+                <CheckCircle className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                <span className="text-xs text-indigo-300">{t('landing.frac_on_chain')}</span>
+              </div>
+            </motion.div>
+
           </div>
         </div>
       </section>
