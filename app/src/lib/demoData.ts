@@ -138,6 +138,30 @@ export const DEMO_PROPERTIES = [
 ];
 
 export const DEMO_DEALS = [
+  // НОВАЯ — только что создана, ждёт пополнения эскроу
+  {
+    dealId: 'deal_006_new',
+    propertyId: 'prop_astana_005',
+    seller: WALLETS.seller3,
+    buyer: WALLETS.buyer1,
+    price: 52_000_000_000,
+    status: 'created',
+    aiRiskScore: 0,
+    aiFlags: [],
+    createdAt: Date.now() - 120000,
+  },
+  // FUNDED — эскроу оплачен, ждёт подтверждения + AI
+  {
+    dealId: 'deal_007_funded',
+    propertyId: 'prop_almaty_006',
+    seller: WALLETS.seller1,
+    buyer: WALLETS.buyer2,
+    price: 85_000_000_000,
+    status: 'funded',
+    aiRiskScore: 0,
+    aiFlags: [],
+    createdAt: Date.now() - 600000,
+  },
   // Успешная сделка
   {
     dealId: 'deal_001',
@@ -190,6 +214,6 @@ export const DEMO_DEALS = [
 
 export const DEMO_STATS = {
   totalProperties: 6,
-  totalDeals: 4,
+  totalDeals: 6,
   totalFraudBlocked: 2,
 };
