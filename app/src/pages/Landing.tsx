@@ -186,13 +186,17 @@ export default function Landing() {
             </motion.div>
           </motion.div>
 
-          {/* Product Panel — full width below text */}
+          {/* Panel + Contract side by side */}
+          <div className="grid lg:grid-cols-2 gap-4 items-stretch">
+
+          {/* Product Panel */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.5 }}
+            className="flex flex-col"
           >
-              <div className="bg-gray-900 border border-gray-700 rounded-2xl overflow-hidden shadow-2xl shadow-black/50">
+              <div className="bg-gray-900 border border-gray-700 rounded-2xl overflow-hidden shadow-2xl shadow-black/50 h-full flex flex-col">
                 {/* Window chrome */}
                 <div className="flex items-center gap-2 px-4 py-3 bg-gray-950 border-b border-gray-800">
                   <div className="flex gap-1.5">
@@ -261,7 +265,7 @@ export default function Landing() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 0.5 }}
-            className="mt-4 bg-gray-900/80 border border-gray-800 rounded-2xl p-6"
+            className="bg-gray-900/80 border border-gray-800 rounded-2xl p-6 flex flex-col"
           >
             <div className="flex items-center gap-3 mb-5">
               <div className="w-10 h-10 rounded-xl bg-green-500/20 flex items-center justify-center">
@@ -305,6 +309,7 @@ export default function Landing() {
               {t('landing.deployed_desc')}
             </a>
           </motion.div>
+          </div>{/* end grid */}
           </div>
       </section>
 
