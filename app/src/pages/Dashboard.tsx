@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Shield, Home, FileText, AlertTriangle, TrendingUp, CheckCircle, ExternalLink, Loader2, Wifi, WifiOff, Brain, Database, BarChart3 } from 'lucide-react';
+import { Shield, Home, FileText, AlertTriangle, TrendingUp, CheckCircle, ExternalLink, Loader2, Wifi, WifiOff, Brain, Database, BarChart3, Layers, Users, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/useStore';
 import { useTrustEstate } from '../hooks/useTrustEstate';
@@ -40,6 +40,7 @@ export default function Dashboard() {
   const { t } = useTranslation();
   const { stats, properties, deals } = useStore();
   const { publicKey } = useWallet();
+  const navigate = useNavigate();
   const { initializePlatform, fetchPlatformState, loading, programId } = useTrustEstate();
 
   const [onChainStats, setOnChainStats] = useState<{
@@ -242,6 +243,78 @@ export default function Dashboard() {
           </div>
         </div>
       </motion.div>
+
+      {/* Fractional Ownership Panel */}
+      {(() => {
+        const fracProps = properties.filter(p => p.isFractionalized);
+        const totalShares = fracProps.reduce((s, p) => s + (p.totalShares || 0), 0);
+        const availShares = fracProps.reduce((s, p) => s + (p.availableShares || 0), 0);
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-gradient-to-r from-indigo-950/40 via-gray-900 to-purple-950/30 border border-indigo-500/20 rounded-xl p-6 mb-6"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold flex items-center gap-2">
+                <Layers className="w-5 h-5 text-indigo-400" />
+                {t('landing.frac_deep_title')}
+              </h2>
+              <span className="text-xs px-2 py-1 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                {t('landing.frac_on_chain')}
+              </span>
+            </div>
+            {fracProps.length === 0 ? (
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-gray-500">{t('properties.no_properties')}</p>
+                <button
+                  onClick={() => navigate('/properties')}
+                  className="text-xs flex items-center gap-1 text-indigo-400 hover:text-indigo-300 transition-colors"
+                >
+                  {t('properties.fractionalize')} <ArrowRight className="w-3 h-3" />
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="bg-gray-950/50 rounded-lg p-4 border border-indigo-500/10">
+                  <div className="text-2xl font-bold text-indigo-400">{fracProps.length}</div>
+                  <div className="text-xs text-gray-500 mt-1">{t('properties.fractionalized')}</div>
+                </div>
+                <div className="bg-gray-950/50 rounded-lg p-4 border border-purple-500/10">
+                  <div className="text-2xl font-bold text-purple-400">{totalShares}</div>
+                  <div className="text-xs text-gray-500 mt-1">{t('properties.total_shares')}</div>
+                </div>
+                <div className="bg-gray-950/50 rounded-lg p-4 border border-cyan-500/10">
+                  <div className="text-2xl font-bold text-cyan-400">{availShares}</div>
+                  <div className="text-xs text-gray-500 mt-1">{t('properties.shares_available')}</div>
+                </div>
+                <div className="bg-gray-950/50 rounded-lg p-4 border border-green-500/10">
+                  <div className="text-2xl font-bold text-green-400">
+                    {fracProps.reduce((s, p) => s + (p.pricePerShare || 0), 0).toFixed(2)}
+                  </div>
+                  <div className="text-xs text-gray-500 mt-1">SOL / {t('landing.frac_share')}</div>
+                </div>
+              </div>
+            )}
+            {fracProps.length > 0 && (
+              <div className="mt-4 space-y-2">
+                {fracProps.map(p => (
+                  <div key={p.propertyId} className="flex items-center justify-between bg-gray-950/40 rounded-lg px-3 py-2 border border-gray-800">
+                    <div className="flex items-center gap-2">
+                      <Layers className="w-3.5 h-3.5 text-indigo-400" />
+                      <span className="text-sm text-gray-300 truncate max-w-[200px]">{p.address}</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-xs text-gray-400">
+                      <span>{p.availableShares}/{p.totalShares} {t('landing.frac_share')}</span>
+                      <span className="text-indigo-300 font-mono">{p.pricePerShare} SOL</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </motion.div>
+        );
+      })()}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <motion.div
