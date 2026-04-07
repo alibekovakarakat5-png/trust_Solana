@@ -34,6 +34,50 @@ export default function PropertyDetail() {
 
   const propertyDeals = deals.filter(d => d.propertyId === prop.propertyId);
   const isSuspicious = prop.fraudFlags > 0 || prop.aiScore < 50;
+
+  // AI analysis details based on property data
+  const aiChecks = [
+    {
+      name: t('properties.ai_score'),
+      status: prop.aiScore >= 70,
+      detail: prop.aiScore >= 70
+        ? `${prop.aiScore}/100 — ${t('risk.safe')}`
+        : `${prop.aiScore}/100 — ${t('risk.high')}`,
+    },
+    {
+      name: 'Duplicate Check',
+      status: !properties.some(p => p.propertyId !== prop.propertyId && p.cadastralId === prop.cadastralId),
+      detail: properties.some(p => p.propertyId !== prop.propertyId && p.cadastralId === prop.cadastralId)
+        ? `DUPLICATE — ${t('tokenize.form_cadastral')} ${prop.cadastralId} already exists`
+        : 'No duplicates found',
+    },
+    {
+      name: 'Price Analysis',
+      status: prop.priceLamports / 1e9 / prop.areaSqm > 0.15,
+      detail: prop.priceLamports / 1e9 / prop.areaSqm > 0.15
+        ? `${(prop.priceLamports / 1e9 / prop.areaSqm).toFixed(2)} SOL/m² — market rate`
+        : `${(prop.priceLamports / 1e9 / prop.areaSqm).toFixed(2)} SOL/m² — suspiciously low`,
+    },
+    {
+      name: 'Seller History',
+      status: properties.filter(p => p.owner === prop.owner).length <= 3,
+      detail: properties.filter(p => p.owner === prop.owner).length > 3
+        ? `${properties.filter(p => p.owner === prop.owner).length} properties — serial seller`
+        : `${properties.filter(p => p.owner === prop.owner).length} properties — normal`,
+    },
+    {
+      name: 'Document Hash',
+      status: prop.isVerified,
+      detail: prop.isVerified ? 'Verified on-chain' : 'Not verified',
+    },
+    {
+      name: 'Fraud Flags',
+      status: prop.fraudFlags === 0,
+      detail: prop.fraudFlags === 0
+        ? 'No flags detected'
+        : `${prop.fraudFlags} flags detected`,
+    },
+  ];
   const isOwner = publicKey?.toBase58() === prop.owner;
 
   return (
@@ -157,7 +201,7 @@ export default function PropertyDetail() {
 
         {/* Right Sidebar */}
         <div className="space-y-6">
-          {/* AI Verification */}
+          {/* AI Verification — Full Analysis */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -171,22 +215,39 @@ export default function PropertyDetail() {
               )}
               <div>
                 <h3 className="font-bold">{t('properties.ai_score')}</h3>
-                <p className="text-xs text-gray-500">AlemLLM</p>
+                <p className="text-xs text-gray-500">AlemLLM — 6 checks</p>
               </div>
             </div>
 
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-between mb-4">
               <span className={`text-3xl font-bold ${isSuspicious ? 'text-red-400' : 'text-green-400'}`}>
                 {prop.aiScore}/100
               </span>
               <RiskBadge score={100 - prop.aiScore} size="sm" />
             </div>
 
-            {prop.fraudFlags > 0 && (
-              <div className="bg-red-500/10 rounded-lg p-3 mt-3">
-                <div className="flex items-center gap-2 text-red-400 text-sm font-medium mb-1">
-                  <AlertTriangle className="w-4 h-4" />
-                  {prop.fraudFlags} {t('properties.fraud_flags')}
+            {/* Detailed checks */}
+            <div className="space-y-2">
+              {aiChecks.map((check, i) => (
+                <div key={i} className={`flex items-start gap-2 p-2 rounded-lg text-xs ${check.status ? 'bg-green-500/5' : 'bg-red-500/10'}`}>
+                  {check.status ? (
+                    <CheckCircle className="w-3.5 h-3.5 text-green-400 mt-0.5 shrink-0" />
+                  ) : (
+                    <AlertTriangle className="w-3.5 h-3.5 text-red-400 mt-0.5 shrink-0" />
+                  )}
+                  <div>
+                    <span className={`font-medium ${check.status ? 'text-green-400' : 'text-red-400'}`}>{check.name}</span>
+                    <p className="text-gray-500 mt-0.5">{check.detail}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {isSuspicious && (
+              <div className="bg-red-500/10 rounded-lg p-3 mt-3 border border-red-500/20">
+                <div className="flex items-center gap-2 text-red-400 text-sm font-bold mb-1">
+                  <Shield className="w-4 h-4" />
+                  {t('profile.warning')}
                 </div>
                 <p className="text-xs text-red-400/70">{t('profile.warning_desc')}</p>
               </div>
@@ -215,7 +276,7 @@ export default function PropertyDetail() {
           </motion.div>
 
           {/* Action Buttons */}
-          {publicKey && !isOwner && prop.isListed && (
+          {publicKey && !isOwner && prop.isListed && !isSuspicious && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -223,15 +284,25 @@ export default function PropertyDetail() {
             >
               <button
                 onClick={() => navigate('/deals', { state: { propertyId: prop.propertyId, price: prop.priceLamports / 1e9 } })}
-                className={`w-full py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all ${
-                  isSuspicious
-                    ? 'bg-red-600/20 border border-red-500/30 text-red-400 hover:bg-red-600/30'
-                    : 'bg-green-600 hover:bg-green-500 text-white'
-                }`}
+                className="w-full py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all bg-green-600 hover:bg-green-500 text-white"
               >
                 <ShoppingCart className="w-5 h-5" />
-                {isSuspicious ? t('profile.warning') + ' — ' + t('properties.buy') : t('properties.buy')}
+                {t('properties.buy')}
               </button>
+            </motion.div>
+          )}
+
+          {/* Blocked purchase for suspicious */}
+          {publicKey && !isOwner && prop.isListed && isSuspicious && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 text-center"
+            >
+              <Shield className="w-8 h-8 text-red-400 mx-auto mb-2" />
+              <p className="text-sm font-bold text-red-400 mb-1">{t('profile.warning')}</p>
+              <p className="text-xs text-red-400/70">{t('profile.warning_desc')}</p>
             </motion.div>
           )}
 
