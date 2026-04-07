@@ -19,26 +19,26 @@ const langs = [
   { code: 'en', label: 'EN' },
 ];
 
-const cleanChecks = [
-  { label: 'Duplicate cadastral ID', status: 'pass' as const, detail: 'Not found in registry' },
-  { label: 'Price anomaly', status: 'pass' as const, detail: '+2% vs market avg' },
-  { label: 'Rapid resale pattern', status: 'pass' as const, detail: 'No recent transfers' },
-  { label: 'Document integrity', status: 'pass' as const, detail: 'Hash verified ✓' },
-  { label: 'Seller history', status: 'pass' as const, detail: 'Clean — 0 flags' },
-  { label: 'Market comparison', status: 'pass' as const, detail: 'Within normal range' },
-];
-
-const fraudChecks = [
-  { label: 'Duplicate cadastral ID', status: 'fail' as const, detail: 'Matches 2 active listings!' },
-  { label: 'Price anomaly', status: 'fail' as const, detail: '-68% below market' },
-  { label: 'Rapid resale pattern', status: 'fail' as const, detail: '3 sales in 6 months' },
-  { label: 'Document integrity', status: 'warn' as const, detail: 'Hash mismatch detected' },
-  { label: 'Seller history', status: 'fail' as const, detail: '4 blocked deals on record' },
-  { label: 'Market comparison', status: 'fail' as const, detail: 'Statistical outlier' },
-];
-
 export default function Landing() {
   const { t, i18n } = useTranslation();
+
+  const cleanChecks = [
+    { label: t('landing.chk1_label'), status: 'pass' as const, detail: t('landing.chk1_pass') },
+    { label: t('landing.chk2_label'), status: 'pass' as const, detail: t('landing.chk2_pass') },
+    { label: t('landing.chk3_label'), status: 'pass' as const, detail: t('landing.chk3_pass') },
+    { label: t('landing.chk4_label'), status: 'pass' as const, detail: t('landing.chk4_pass') },
+    { label: t('landing.chk5_label'), status: 'pass' as const, detail: t('landing.chk5_pass') },
+    { label: t('landing.chk6_label'), status: 'pass' as const, detail: t('landing.chk6_pass') },
+  ];
+
+  const fraudChecks = [
+    { label: t('landing.chk1_label'), status: 'fail' as const, detail: t('landing.chk1_fail') },
+    { label: t('landing.chk2_label'), status: 'fail' as const, detail: t('landing.chk2_fail') },
+    { label: t('landing.chk3_label'), status: 'fail' as const, detail: t('landing.chk3_fail') },
+    { label: t('landing.chk4_label'), status: 'warn' as const, detail: t('landing.chk4_warn') },
+    { label: t('landing.chk5_label'), status: 'fail' as const, detail: t('landing.chk5_fail') },
+    { label: t('landing.chk6_label'), status: 'fail' as const, detail: t('landing.chk6_fail') },
+  ];
   const [showLangs, setShowLangs] = useState(false);
 
   // AI Demo state
@@ -137,64 +137,61 @@ export default function Landing() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary-900/40 via-gray-950 to-gray-950" />
         <div className="absolute top-10 left-1/4 w-[500px] h-[500px] bg-primary-500/8 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-10 items-center">
-
-            {/* Left: copy */}
-            <motion.div initial="hidden" animate="visible" variants={stagger}>
-              <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary-500/30 bg-primary-500/10 text-primary-300 text-xs mb-5">
-                <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                {t('landing.badge')}
-              </motion.div>
-
-              <motion.h1 variants={fadeUp} className="text-4xl md:text-6xl font-bold mb-4 leading-tight bg-gradient-to-r from-white via-primary-200 to-primary-400 bg-clip-text text-transparent">
-                {t('landing.title')}
-              </motion.h1>
-
-              <motion.p variants={fadeUp} className="text-base text-gray-400 mb-6 leading-relaxed max-w-lg">
-                {t('landing.subtitle')}
-              </motion.p>
-
-              <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-3 mb-8">
-                <Link
-                  to="/properties"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-primary-600 hover:bg-primary-500 rounded-xl font-semibold transition-all hover:scale-105 hover:shadow-lg hover:shadow-primary-500/20"
-                >
-                  <Shield className="w-4 h-4" />
-                  {t('landing.cta_demo')}
-                </Link>
-                <a
-                  href={`https://explorer.solana.com/address/${PROGRAM_ID}?cluster=devnet`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-gray-700 hover:border-primary-500/50 rounded-xl font-semibold transition-all hover:bg-gray-900"
-                >
-                  <ExternalLink className="w-4 h-4" />
-                  {t('landing.cta_explorer')}
-                </a>
-              </motion.div>
-
-              <motion.div variants={fadeUp} className="grid grid-cols-3 gap-3">
-                {[
-                  { num: '12,000+', text: t('landing.stat_fraud') },
-                  { num: '15M ₸', text: t('landing.stat_loss') },
-                  { num: '8–14', text: t('landing.stat_time') },
-                ].map((s, i) => (
-                  <div key={i} className="text-center p-3 rounded-xl bg-red-500/5 border border-red-500/10">
-                    <div className="text-xl font-bold text-red-400">{s.num}</div>
-                    <div className="text-[10px] text-gray-500 leading-tight mt-0.5">{s.text}</div>
-                  </div>
-                ))}
-              </motion.div>
+        <div className="relative max-w-5xl mx-auto">
+          {/* Centered text block */}
+          <motion.div initial="hidden" animate="visible" variants={stagger} className="text-center">
+            <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary-500/30 bg-primary-500/10 text-primary-300 text-xs mb-5">
+              <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+              {t('landing.badge')}
             </motion.div>
 
-            {/* Right: Product Panel mockup */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3, duration: 0.5 }}
-              className="hidden lg:block"
-            >
+            <motion.h1 variants={fadeUp} className="text-4xl md:text-6xl font-bold mb-4 leading-tight bg-gradient-to-r from-white via-primary-200 to-primary-400 bg-clip-text text-transparent">
+              {t('landing.title')}
+            </motion.h1>
+
+            <motion.p variants={fadeUp} className="text-base text-gray-400 mb-6 leading-relaxed max-w-2xl mx-auto">
+              {t('landing.subtitle')}
+            </motion.p>
+
+            <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-3 mb-8 justify-center">
+              <Link
+                to="/properties"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-primary-600 hover:bg-primary-500 rounded-xl font-semibold transition-all hover:scale-105 hover:shadow-lg hover:shadow-primary-500/20"
+              >
+                <Shield className="w-4 h-4" />
+                {t('landing.cta_demo')}
+              </Link>
+              <a
+                href={`https://explorer.solana.com/address/${PROGRAM_ID}?cluster=devnet`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-gray-700 hover:border-primary-500/50 rounded-xl font-semibold transition-all hover:bg-gray-900"
+              >
+                <ExternalLink className="w-4 h-4" />
+                {t('landing.cta_explorer')}
+              </a>
+            </motion.div>
+
+            <motion.div variants={fadeUp} className="grid grid-cols-3 gap-3 max-w-lg mx-auto mb-12">
+              {[
+                { num: '12,000+', text: t('landing.stat_fraud') },
+                { num: '15M ₸', text: t('landing.stat_loss') },
+                { num: '8–14', text: t('landing.stat_time') },
+              ].map((s, i) => (
+                <div key={i} className="text-center p-3 rounded-xl bg-red-500/5 border border-red-500/10">
+                  <div className="text-xl font-bold text-red-400">{s.num}</div>
+                  <div className="text-[10px] text-gray-500 leading-tight mt-0.5">{s.text}</div>
+                </div>
+              ))}
+            </motion.div>
+          </motion.div>
+
+          {/* Product Panel — full width below text */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+          >
               <div className="bg-gray-900 border border-gray-700 rounded-2xl overflow-hidden shadow-2xl shadow-black/50">
                 {/* Window chrome */}
                 <div className="flex items-center gap-2 px-4 py-3 bg-gray-950 border-b border-gray-800">
@@ -258,8 +255,57 @@ export default function Landing() {
                 </div>
               </div>
             </motion.div>
+
+          {/* Contract proof card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7, duration: 0.5 }}
+            className="mt-4 bg-gray-900/80 border border-gray-800 rounded-2xl p-6"
+          >
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-10 h-10 rounded-xl bg-green-500/20 flex items-center justify-center">
+                <CheckCircle className="w-5 h-5 text-green-400" />
+              </div>
+              <div>
+                <h3 className="font-bold">{t('landing.deployed')}</h3>
+                <p className="text-xs text-gray-500">Solana Devnet</p>
+              </div>
+              <div className="ml-auto flex items-center gap-1.5 text-xs text-green-400 font-medium">
+                <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                Live
+              </div>
+            </div>
+
+            <div className="bg-gray-950 rounded-lg p-3 mb-4 font-mono text-xs text-primary-300 text-center border border-gray-800 break-all">
+              {PROGRAM_ID}
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+              {[
+                { label: t('landing.proof_contract'), value: '12 instructions' },
+                { label: t('landing.proof_ai'), value: 'AlemLLM' },
+                { label: 'Fraud Checks', value: '7 automated' },
+                { label: 'On-Chain', value: '6 account types' },
+              ].map((item, i) => (
+                <div key={i} className="bg-gray-950 rounded-lg p-3 border border-gray-800 text-center">
+                  <div className="text-xs text-gray-500 mb-1">{item.label}</div>
+                  <div className="text-sm font-bold text-white">{item.value}</div>
+                </div>
+              ))}
+            </div>
+
+            <a
+              href={`https://explorer.solana.com/address/${PROGRAM_ID}?cluster=devnet`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-green-600/20 hover:bg-green-600/30 border border-green-500/20 rounded-lg text-sm text-green-400 font-medium transition-colors"
+            >
+              <ExternalLink className="w-4 h-4" />
+              {t('landing.deployed_desc')}
+            </a>
+          </motion.div>
           </div>
-        </div>
       </section>
 
       {/* ── PROBLEM vs SOLUTION ── */}
