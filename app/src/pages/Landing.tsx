@@ -93,11 +93,11 @@ export default function Landing() {
 
           <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
-              to="/tokenize"
+              to="/properties"
               className="inline-flex items-center gap-2 px-8 py-4 bg-primary-600 hover:bg-primary-500 rounded-xl text-lg font-semibold transition-all hover:scale-105 hover:shadow-lg hover:shadow-primary-500/25"
             >
               <Shield className="w-5 h-5" />
-              {t('landing.cta_demo')}
+              Try Live Demo
             </Link>
             <a
               href={`https://explorer.solana.com/address/${PROGRAM_ID}?cluster=devnet`}
@@ -106,7 +106,7 @@ export default function Landing() {
               className="inline-flex items-center gap-2 px-8 py-4 border border-gray-700 hover:border-primary-500/50 rounded-xl text-lg font-semibold transition-all hover:bg-gray-900"
             >
               <ExternalLink className="w-5 h-5" />
-              Solana Explorer
+              Verify on Solana Explorer
             </a>
           </motion.div>
 
@@ -294,6 +294,42 @@ export default function Landing() {
                     <div className="text-xs text-gray-500">{item.desc}</div>
                   </Link>
                 )}
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Why Solana — judge narrative */}
+      <section className="py-16 px-4 border-t border-gray-800/50">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-8"
+          >
+            <h2 className="text-2xl md:text-3xl font-bold mb-2">Why Solana — not just a database</h2>
+            <p className="text-gray-500 text-sm">Without blockchain, fraud prevention is just a promise. With Solana, it's provable.</p>
+          </motion.div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              { icon: Shield, title: 'NFT = Unique Identity', desc: 'Each property is a unique on-chain token — no duplicates possible', color: 'text-blue-400' },
+              { icon: Lock, title: 'Escrow = Funds Protected', desc: 'Money held in smart contract until AI approves — never sent early', color: 'text-green-400' },
+              { icon: Eye, title: 'Public Audit Trail', desc: 'Every deal permanently recorded — anyone can verify via Explorer', color: 'text-purple-400' },
+              { icon: Zap, title: 'AI Verdict On-Chain', desc: 'Fraud detection result is stored on-chain — not just a UI warning', color: 'text-yellow-400' },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+                className="bg-gray-900/50 border border-gray-800 rounded-xl p-4 text-center"
+              >
+                <item.icon className={`w-8 h-8 ${item.color} mx-auto mb-3`} />
+                <div className="font-semibold text-sm mb-1">{item.title}</div>
+                <div className="text-xs text-gray-500 leading-relaxed">{item.desc}</div>
               </motion.div>
             ))}
           </div>

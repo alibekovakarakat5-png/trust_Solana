@@ -17,6 +17,23 @@
 
 ---
 
+## ⚡ For Judges — Verify in 5 Minutes
+
+> **Problem:** Real estate fraud costs Kazakhstan families millions yearly — duplicate listings, forged docs, rapid resales.
+>
+> **What's live now:** Property tokenization on Solana Devnet · AI fraud detection (AlemLLM) · Atomic escrow deal pipeline · On-chain proof
+>
+> **How to verify:**
+> 1. Connect Phantom on **Devnet** → open the app
+> 2. [Click Explorer link](https://explorer.solana.com/address/8j9MKKmvkYeZw9SUtt7KucShygxcjZHMYpnGoJFUY1MY?cluster=devnet) → confirm contract is deployed
+> 3. **Happy path:** Open any Almaty/Astana property → Buy → watch deal pipeline reach `Completed`
+> 4. **Fraud path:** Open Shymkent property (AI Score: 22) → deal is automatically `Blocked` by AI
+> 5. Dashboard → AI Fraud Analytics → see 2 blocked fraudulent deals
+
+> **Known scope (MVP):** Demo runs on Devnet with pre-loaded demo data. AI backend uses AlemLLM. Mainnet deployment and cadastral registry integration are Phase 2.
+
+---
+
 ## 🚨 The Problem
 
 Every year in Kazakhstan, **real estate fraud devastates thousands of families**:

@@ -13,9 +13,9 @@
     "en": "English"
   },
   "landing": {
-    "badge": "Built on Solana | AI-Powered Verification",
-    "title": "Real Estate Fraud Protection",
-    "subtitle": "TrustEstate uses artificial intelligence and Solana blockchain to verify every real estate transaction in Kazakhstan. Tokenization, escrow, transparency.",
+    "badge": "Live on Solana Devnet · AI Fraud Detection",
+    "title": "Stop Real Estate Fraud Before Money Moves",
+    "subtitle": "TrustEstate blocks fraudulent deals automatically — using AI verification and on-chain escrow. Every property tokenized. Every transaction provable.",
     "cta_start": "Get Started",
     "cta_demo": "Watch Demo",
     "stat_fraud": "real estate fraud cases annually",

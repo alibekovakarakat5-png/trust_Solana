@@ -89,6 +89,14 @@ export default function Guide() {
     { q: t('guide.faq4_q'), a: t('guide.faq4_a') },
   ];
 
+  const judgeChecklist = [
+    { emoji: '👛', text: 'Connect Phantom wallet → switch to Devnet' },
+    { emoji: '🔗', text: 'Click Explorer link → verify contract is deployed' },
+    { emoji: '✅', text: 'Happy path: open Almaty apt → Buy → watch deal reach Completed' },
+    { emoji: '🚨', text: 'Fraud path: open Shymkent apt → AI Score 22 → deal is Blocked' },
+    { emoji: '📊', text: 'Dashboard → see 2 blocked frauds in AI Fraud Analytics' },
+  ];
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
@@ -98,7 +106,43 @@ export default function Guide() {
           </div>
           <h1 className="text-2xl font-bold">{t('guide.title')}</h1>
         </div>
-        <p className="text-sm text-gray-500 mb-8">{t('guide.subtitle')}</p>
+        <p className="text-sm text-gray-500 mb-6">{t('guide.subtitle')}</p>
+      </motion.div>
+
+      {/* Judge Checklist — top priority */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.05 }}
+        className="bg-primary-900/20 border border-primary-500/30 rounded-2xl p-6 mb-8"
+      >
+        <div className="flex items-center gap-2 mb-4">
+          <CheckCircle className="w-5 h-5 text-primary-400" />
+          <h2 className="text-lg font-bold text-primary-300">Judge Quick-Verify — 5 min</h2>
+          <span className="ml-auto text-xs text-gray-500 font-mono bg-gray-900 px-2 py-1 rounded">Devnet</span>
+        </div>
+        <div className="space-y-2 mb-4">
+          {judgeChecklist.map((item, i) => (
+            <div key={i} className="flex items-center gap-3 text-sm">
+              <span className="text-lg leading-none">{item.emoji}</span>
+              <span className="text-gray-200">{item.text}</span>
+            </div>
+          ))}
+        </div>
+        <div className="flex flex-wrap gap-3 mt-4">
+          <a
+            href={`https://explorer.solana.com/address/${PROGRAM_ID}?cluster=devnet`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-primary-600/20 hover:bg-primary-600/30 border border-primary-500/30 rounded-lg text-sm text-primary-300 font-medium transition-colors"
+          >
+            <ExternalLink className="w-4 h-4" />
+            Verify on Solana Explorer
+          </a>
+          <span className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg text-xs text-gray-400 font-mono">
+            {PROGRAM_ID.slice(0, 8)}...{PROGRAM_ID.slice(-8)}
+          </span>
+        </div>
       </motion.div>
 
       {/* Steps */}
