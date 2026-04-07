@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Shield, Home, FileText, AlertTriangle, TrendingUp, CheckCircle, ExternalLink, Loader2, Wifi, WifiOff, Brain, Database, BarChart3, Layers, Users, ArrowRight } from 'lucide-react';
+import { Shield, Home, FileText, AlertTriangle, TrendingUp, CheckCircle, ExternalLink, Loader2, Wifi, WifiOff, Brain, Database, BarChart3, Layers, Users, ArrowRight, Percent, Coins } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/useStore';
 import { useTrustEstate } from '../hooks/useTrustEstate';
@@ -43,6 +43,9 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const { initializePlatform, fetchPlatformState, loading, programId } = useTrustEstate();
 
+  const { buyShares: buySharesOnChain } = useTrustEstate();
+  const { addProperty, updateProperty } = useStore();
+
   const [onChainStats, setOnChainStats] = useState<{
     authority: string;
     totalProperties: number;
@@ -52,6 +55,43 @@ export default function Dashboard() {
   const [platformInitialized, setPlatformInitialized] = useState<boolean | null>(null);
   const [initializing, setInitializing] = useState(false);
   const [aiProvider, setAiProvider] = useState<string | null>(null);
+
+  // Fractional demo state
+  const [fracSharesToBuy, setFracSharesToBuy] = useState(40);
+  const [fracOwned, setFracOwned] = useState(0);
+  const [fracBuying, setFracBuying] = useState(false);
+  const [fracTxSig, setFracTxSig] = useState<string | null>(null);
+
+  const DEMO_PROP_ID = 'demo_frac_almaty_001';
+
+  // Seed demo fractionalized property if not present
+  useEffect(() => {
+    const exists = properties.find(p => p.propertyId === DEMO_PROP_ID);
+    if (!exists) {
+      addProperty({
+        propertyId: DEMO_PROP_ID,
+        address: 'Алматы, пр. Абая 50, кв. 12',
+        areaSqm: 75,
+        rooms: 3,
+        floor: 7,
+        totalFloors: 16,
+        cadastralId: 'KZ-ALM-2024-50-12',
+        priceLamports: 100_000_000_000,
+        propertyType: 'Apartment',
+        isVerified: true,
+        aiScore: 92,
+        fraudFlags: 0,
+        isListed: true,
+        owner: publicKey?.toBase58() || 'demo_owner',
+        status: 'verified',
+        isFractionalized: true,
+        totalShares: 100,
+        pricePerShare: 1,
+        availableShares: 60,
+      });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const verifiedCount = properties.filter(p => p.isVerified).length;
 
@@ -243,6 +283,175 @@ export default function Dashboard() {
           </div>
         </div>
       </motion.div>
+
+      {/* ── FRACTIONAL DEMO WIDGET ── */}
+      {(() => {
+        const demoProp = properties.find(p => p.propertyId === DEMO_PROP_ID);
+        if (!demoProp) return null;
+        const totalShares = demoProp.totalShares || 100;
+        const availShares = demoProp.availableShares || 0;
+        const soldShares = totalShares - availShares;
+        const ownedPct = Math.round((fracOwned / totalShares) * 100);
+        const soldPct = Math.round((soldShares / totalShares) * 100);
+        const availPct = 100 - soldPct - ownedPct;
+        const canBuy = fracSharesToBuy > 0 && fracSharesToBuy <= availShares && !fracOwned;
+
+        async function handleFracDemo() {
+          if (!canBuy) return;
+          setFracBuying(true);
+          // Step 1: AI check simulation (1.5s)
+          await new Promise(r => setTimeout(r, 1500));
+          // Step 2: Try on-chain, fallback to local
+          try {
+            if (demoProp?.shareMintPubkey && publicKey) {
+              const tx = await buySharesOnChain({
+                propertyId: DEMO_PROP_ID,
+                propertyOwner: demoProp.owner,
+                shareMintPubkey: demoProp.shareMintPubkey,
+                numShares: fracSharesToBuy,
+              });
+              setFracTxSig(tx as string);
+            }
+          } catch {
+            setFracTxSig('demo_tx_' + Date.now());
+          }
+          updateProperty(DEMO_PROP_ID, { availableShares: availShares - fracSharesToBuy });
+          setFracOwned(fracSharesToBuy);
+          setFracBuying(false);
+        }
+
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-gradient-to-r from-indigo-950/50 via-gray-900 to-purple-950/40 border border-indigo-500/30 rounded-xl p-6 mb-6"
+          >
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-lg font-semibold flex items-center gap-2">
+                <Layers className="w-5 h-5 text-indigo-400" />
+                {t('landing.frac_deep_title')} — Demo
+              </h2>
+              <span className="text-xs px-2 py-1 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
+                {t('landing.frac_on_chain')}
+              </span>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Left: property info */}
+              <div>
+                <div className="bg-gray-950 rounded-xl p-4 border border-gray-800 mb-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Home className="w-4 h-4 text-indigo-400" />
+                    <span className="font-semibold text-sm">{demoProp.address}</span>
+                    <span className="ml-auto text-xs text-green-400 flex items-center gap-1">
+                      <CheckCircle className="w-3 h-3" /> AI Score: {demoProp.aiScore}
+                    </span>
+                  </div>
+                  <div className="flex gap-4 text-xs text-gray-500">
+                    <span>{demoProp.areaSqm} м²</span>
+                    <span>{demoProp.rooms} комн.</span>
+                    <span>{demoProp.floor} этаж</span>
+                    <span className="text-white font-mono">100 SOL</span>
+                  </div>
+                </div>
+
+                {/* Share distribution bar */}
+                <div className="mb-3">
+                  <div className="flex justify-between text-xs text-gray-400 mb-1.5">
+                    <span>{t('properties.total_shares')}: {totalShares}</span>
+                    <span>{availShares} {t('properties.shares_available')}</span>
+                  </div>
+                  <div className="h-4 rounded-full overflow-hidden flex gap-0.5 bg-gray-800">
+                    {soldPct > 0 && (
+                      <div className="bg-gray-600 h-full transition-all duration-700" style={{ width: `${soldPct}%` }} title={`Sold: ${soldPct}%`} />
+                    )}
+                    {ownedPct > 0 && (
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${ownedPct}%` }}
+                        transition={{ duration: 0.8 }}
+                        className="bg-indigo-500 h-full"
+                        title={`You: ${ownedPct}%`}
+                      />
+                    )}
+                    <div className="bg-green-600/40 h-full flex-1" title={`Available: ${availPct}%`} />
+                  </div>
+                  <div className="flex gap-3 mt-1.5 text-[10px]">
+                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-gray-600 inline-block" /> Sold {soldPct}%</span>
+                    {ownedPct > 0 && <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-indigo-500 inline-block" /> You {ownedPct}%</span>}
+                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-600/60 inline-block" /> Available {availPct}%</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right: buy or result */}
+              <div className="flex flex-col justify-center">
+                {fracOwned > 0 ? (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="bg-indigo-500/10 border border-indigo-500/30 rounded-xl p-5 text-center"
+                  >
+                    <div className="text-5xl font-black text-indigo-400 mb-1">{ownedPct}%</div>
+                    <div className="text-sm text-indigo-300 mb-2">{t('landing.frac_rental_income')}</div>
+                    <div className="text-xs text-gray-400 mb-3">{fracOwned} / {totalShares} {t('landing.frac_share')}</div>
+                    {fracTxSig && (
+                      <a
+                        href={fracTxSig.startsWith('demo_') ? '#' : `https://explorer.solana.com/tx/${fracTxSig}?cluster=devnet`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-indigo-400 flex items-center justify-center gap-1 hover:underline"
+                      >
+                        <ExternalLink className="w-3 h-3" />
+                        {fracTxSig.startsWith('demo_') ? 'Demo transaction' : 'View on Solana Explorer'}
+                      </a>
+                    )}
+                  </motion.div>
+                ) : (
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-xs text-gray-400 mb-1.5 block">{t('landing.frac_shares_to_buy')} (из {availShares} доступных)</label>
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="range"
+                          min={1}
+                          max={availShares}
+                          value={fracSharesToBuy}
+                          onChange={e => setFracSharesToBuy(Number(e.target.value))}
+                          className="flex-1 accent-indigo-500"
+                        />
+                        <span className="w-10 text-center text-white font-bold text-sm">{fracSharesToBuy}</span>
+                      </div>
+                      <div className="flex justify-between text-xs text-gray-500 mt-1">
+                        <span>{Math.round(fracSharesToBuy / totalShares * 100)}% объекта</span>
+                        <span className="text-indigo-300 font-mono">{(fracSharesToBuy * (demoProp.pricePerShare || 1)).toFixed(0)} SOL</span>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={handleFracDemo}
+                      disabled={!canBuy || fracBuying}
+                      className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 rounded-xl text-sm font-semibold transition-all flex items-center justify-center gap-2"
+                    >
+                      {fracBuying ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          AI проверяет сделку...
+                        </>
+                      ) : (
+                        <>
+                          <Coins className="w-4 h-4" />
+                          Купить {fracSharesToBuy} долей ({Math.round(fracSharesToBuy / totalShares * 100)}%) за {(fracSharesToBuy * (demoProp.pricePerShare || 1)).toFixed(0)} SOL
+                        </>
+                      )}
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        );
+      })()}
 
       {/* Fractional Ownership Panel */}
       {(() => {
