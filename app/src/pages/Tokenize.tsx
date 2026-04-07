@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { motion } from 'framer-motion';
-import { Upload, Shield, AlertTriangle, CheckCircle, Loader2, ExternalLink, UserCheck, FileCheck, KeyRound } from 'lucide-react';
+import { Upload, Shield, AlertTriangle, CheckCircle, Loader2, ExternalLink, UserCheck, FileCheck, KeyRound, Zap } from 'lucide-react';
 import { api } from '../lib/api';
 import { useStore } from '../store/useStore';
 import { useTxStore } from '../store/useTxStore';
@@ -38,6 +38,18 @@ export default function Tokenize() {
   const [solanaResult, setSolanaResult] = useState<{ tx: string; mint: string } | null>(null);
 
   const update = (key: string, val: string) => setForm(prev => ({ ...prev, [key]: val }));
+
+  const DEMO_OWNERSHIP = { iin: '950101350123', cadastralId: '20:01:123456:789' };
+  const DEMO_FORM = {
+    address: 'Алматы, пр. Абая 50, кв. 12',
+    areaSqm: '75',
+    rooms: '3',
+    floor: '7',
+    totalFloors: '16',
+    cadastralId: '20:01:123456:789',
+    price: '45',
+    propertyType: 'Apartment',
+  };
 
   async function handleOwnershipCheck(e: React.FormEvent) {
     e.preventDefault();
@@ -204,6 +216,21 @@ export default function Tokenize() {
             </div>
           </div>
 
+          {/* Demo autofill banner */}
+          <div className="flex items-center justify-between bg-yellow-500/10 border border-yellow-500/20 rounded-xl px-4 py-3 mb-2">
+            <div className="flex items-center gap-2 text-yellow-300 text-sm">
+              <Zap className="w-4 h-4 shrink-0" />
+              <span>Demo: ИИН <span className="font-mono bg-yellow-500/10 px-1 rounded">950101350123</span> · Кадастр <span className="font-mono bg-yellow-500/10 px-1 rounded">20:01:123456:789</span></span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setOwnershipForm(DEMO_OWNERSHIP)}
+              className="shrink-0 ml-3 px-3 py-1 bg-yellow-500/20 hover:bg-yellow-500/30 border border-yellow-500/30 text-yellow-300 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1"
+            >
+              <Zap className="w-3 h-3" /> Заполнить
+            </button>
+          </div>
+
           <form onSubmit={handleOwnershipCheck} className="bg-gray-900 border border-gray-800 rounded-xl p-6 space-y-5">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center">
@@ -288,6 +315,21 @@ export default function Tokenize() {
       )}
 
       {step === 'form' && (
+        <>
+        {/* Demo autofill banner step 2 */}
+        <div className="flex items-center justify-between bg-yellow-500/10 border border-yellow-500/20 rounded-xl px-4 py-3 mb-2">
+          <div className="flex items-center gap-2 text-yellow-300 text-sm">
+            <Zap className="w-4 h-4 shrink-0" />
+            <span>Demo: Алматы, Абая 50 · 75м² · 3 комн · 7/16 эт · 45 SOL</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setForm(DEMO_FORM)}
+            className="shrink-0 ml-3 px-3 py-1 bg-yellow-500/20 hover:bg-yellow-500/30 border border-yellow-500/30 text-yellow-300 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1"
+          >
+            <Zap className="w-3 h-3" /> Заполнить
+          </button>
+        </div>
         <motion.form
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -342,6 +384,7 @@ export default function Tokenize() {
             {t('tokenize.submit')}
           </button>
         </motion.form>
+        </>
       )}
 
       {step === 'verifying' && (
