@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import Properties from './pages/Properties';
 import Tokenize from './pages/Tokenize';
 import Deals from './pages/Deals';
+import Guide from './pages/Guide';
 import PropertyDetail from './pages/PropertyDetail';
 import { Toaster } from 'react-hot-toast';
 import { useStore } from './store/useStore';
@@ -34,6 +35,7 @@ export default function App() {
         <Route path="/properties/:id" element={<PropertyDetail />} />
         <Route path="/tokenize" element={<Tokenize />} />
         <Route path="/deals" element={<Deals />} />
+        <Route path="/guide" element={<Guide />} />
       </Routes>
       <Toaster position="bottom-right" toastOptions={{ style: { background: '#1f2937', color: '#fff', border: '1px solid #374151' } }} />
     </div>

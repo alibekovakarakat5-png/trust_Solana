@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
-import { Shield, Home, PlusCircle, FileText, BarChart3, Globe, Menu, X, Wallet, LogOut, User } from 'lucide-react';
+import { Shield, Home, PlusCircle, FileText, BarChart3, Globe, Menu, X, Wallet, LogOut, User, HelpCircle } from 'lucide-react';
 import { useState } from 'react';
 import ProfileCard from './ProfileCard';
 
@@ -27,6 +27,7 @@ export default function Navbar() {
     { to: '/properties', label: t('nav.properties'), icon: Home },
     { to: '/tokenize', label: t('nav.tokenize'), icon: PlusCircle },
     { to: '/deals', label: t('nav.deals'), icon: FileText },
+    { to: '/guide', label: t('guide.title'), icon: HelpCircle },
   ];
 
   return (

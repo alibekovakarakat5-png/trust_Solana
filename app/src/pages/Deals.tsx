@@ -91,7 +91,9 @@ export default function Deals() {
 
     try {
       // For fraud properties: signal high seller activity + low verification + price deviation
-      const isSuspicious = prop && (prop.fraudFlags > 0 || prop.aiScore < 50);
+      const sellerProps = properties.filter(p => p.owner === deal.seller);
+      const sellerHasFraud = sellerProps.some(p => p.fraudFlags > 0 || p.aiScore < 50);
+      const isSuspicious = (prop && (prop.fraudFlags > 0 || prop.aiScore < 50)) || sellerHasFraud;
       const result = await api.checkDeal({
         dealId: deal.dealId,
         propertyId: deal.propertyId,
