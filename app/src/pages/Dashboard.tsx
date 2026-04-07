@@ -44,7 +44,7 @@ export default function Dashboard() {
   const { initializePlatform, fetchPlatformState, loading, programId } = useTrustEstate();
 
   const { buyShares: buySharesOnChain } = useTrustEstate();
-  const { addProperty, updateProperty } = useStore();
+  const { updateProperty } = useStore();
 
   const [onChainStats, setOnChainStats] = useState<{
     authority: string;
@@ -63,35 +63,6 @@ export default function Dashboard() {
   const [fracTxSig, setFracTxSig] = useState<string | null>(null);
 
   const DEMO_PROP_ID = 'demo_frac_almaty_001';
-
-  // Seed demo fractionalized property if not present
-  useEffect(() => {
-    const exists = properties.find(p => p.propertyId === DEMO_PROP_ID);
-    if (!exists) {
-      addProperty({
-        propertyId: DEMO_PROP_ID,
-        address: 'Алматы, пр. Абая 50, кв. 12',
-        areaSqm: 75,
-        rooms: 3,
-        floor: 7,
-        totalFloors: 16,
-        cadastralId: 'KZ-ALM-2024-50-12',
-        priceLamports: 100_000_000_000,
-        propertyType: 'Apartment',
-        isVerified: true,
-        aiScore: 92,
-        fraudFlags: 0,
-        isListed: true,
-        owner: publicKey?.toBase58() || 'demo_owner',
-        status: 'verified',
-        isFractionalized: true,
-        totalShares: 100,
-        pricePerShare: 1,
-        availableShares: 60,
-      });
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const verifiedCount = properties.filter(p => p.isVerified).length;
 

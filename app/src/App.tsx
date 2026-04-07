@@ -13,12 +13,12 @@ import { useStore } from './store/useStore';
 import { DEMO_PROPERTIES, DEMO_DEALS, DEMO_STATS } from './lib/demoData';
 
 export default function App() {
-  const { properties, setProperties, setDeals, setStats } = useStore();
+  const { properties, deals, setProperties, setDeals, setStats } = useStore();
   const { pathname } = useLocation();
   const isLanding = pathname === '/';
 
   useEffect(() => {
-    if (properties.length === 0) {
+    if (properties.length === 0 || deals.length === 0) {
       setProperties(DEMO_PROPERTIES);
       setDeals(DEMO_DEALS);
       setStats(DEMO_STATS);

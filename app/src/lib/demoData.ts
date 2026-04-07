@@ -135,6 +135,29 @@ export const DEMO_PROPERTIES = [
     status: 'pending_verification',
     imageUrl: PROPERTY_IMAGES.fraud2,
   },
+  // === ФРАКЦИОНАЛИЗИРОВАННЫЙ ОБЪЕКТ (для демо Dashboard) ===
+  {
+    propertyId: 'demo_frac_almaty_001',
+    address: 'Алматы, пр. Абая 50, кв. 12',
+    areaSqm: 75,
+    rooms: 3,
+    floor: 7,
+    totalFloors: 16,
+    cadastralId: 'KZ-ALM-2024-50-12',
+    priceLamports: 100_000_000_000,
+    propertyType: 'Apartment',
+    isVerified: true,
+    aiScore: 92,
+    fraudFlags: 0,
+    isListed: true,
+    owner: WALLETS.seller1,
+    status: 'verified',
+    isFractionalized: true,
+    totalShares: 100,
+    pricePerShare: 1,
+    availableShares: 60,
+    imageUrl: PROPERTY_IMAGES.apartment1,
+  },
 ];
 
 export const DEMO_DEALS = [
@@ -213,7 +236,7 @@ export const DEMO_DEALS = [
 ];
 
 export const DEMO_STATS = {
-  totalProperties: 6,
+  totalProperties: 7,
   totalDeals: 6,
   totalFraudBlocked: 2,
 };
