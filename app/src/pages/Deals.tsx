@@ -155,9 +155,12 @@ export default function Deals() {
   }
 
   async function handleStatusChange(dealId: string, newStatus: string, toastKey: string) {
+    if (!publicKey) { toast.error(t('common.connect_wallet')); return; }
     setProcessing(dealId);
     try {
       await ensureDealOnBackend(dealId);
+      // Simulate blockchain confirmation delay
+      await new Promise(r => setTimeout(r, 1500));
       await api.updateDealStatus(dealId, { status: newStatus });
       updateDeal(dealId, { status: newStatus });
       toast.success(t(toastKey));
@@ -170,10 +173,12 @@ export default function Deals() {
   }
 
   async function handleConfirmDeal(dealId: string) {
+    if (!publicKey) { toast.error(t('common.connect_wallet')); return; }
     setProcessing(dealId);
     try {
       await ensureDealOnBackend(dealId);
-      // First set to awaiting_ai, then auto-run AI check
+      // Simulate seller confirmation delay
+      await new Promise(r => setTimeout(r, 1500));
       await api.updateDealStatus(dealId, { status: 'awaiting_ai' });
       updateDeal(dealId, { status: 'awaiting_ai' });
       toast.success(t('deals.confirmed_success'));
@@ -317,7 +322,7 @@ export default function Deals() {
                       disabled={processing === deal.dealId}
                       className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2"
                     >
-                      <Wallet className="w-4 h-4" />
+                      {processing === deal.dealId ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wallet className="w-4 h-4" />}
                       {t('deals.fund_escrow')}
                     </button>
                     <button
@@ -361,7 +366,7 @@ export default function Deals() {
                       disabled={processing === deal.dealId}
                       className="bg-green-600 hover:bg-green-500 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2"
                     >
-                      <Zap className="w-4 h-4" />
+                      {processing === deal.dealId ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4" />}
                       {t('deals.execute_deal')}
                     </button>
                     <button
