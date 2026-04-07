@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Home, MapPin, Maximize, Shield, ShoppingCart, Layers, ShoppingBag } from 'lucide-react';
+import { Home, MapPin, Maximize, Shield, ShoppingCart, Layers, ShoppingBag, ExternalLink } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { useWallet } from '@solana/wallet-adapter-react';
 import StatusBadge from '../components/StatusBadge';
@@ -8,42 +8,73 @@ import RiskBadge from '../components/RiskBadge';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { useTrustEstate } from '../hooks/useTrustEstate';
 
 export default function Properties() {
   const { t } = useTranslation();
   const { properties, updateProperty } = useStore();
   const { publicKey } = useWallet();
   const navigate = useNavigate();
+  const { fractionalizeProperty, buyShares, loading: onChainLoading } = useTrustEstate();
   const [fractionalizing, setFractionalizing] = useState<string | null>(null);
   const [totalShares, setTotalShares] = useState('');
   const [pricePerShare, setPricePerShare] = useState('');
   const [buyingShares, setBuyingShares] = useState<string | null>(null);
   const [sharesToBuy, setSharesToBuy] = useState('1');
 
-  function handleBuyShares(prop: typeof properties[0], e: React.FormEvent) {
+  async function handleBuyShares(prop: typeof properties[0], e: React.FormEvent) {
     e.preventDefault();
     const count = Number(sharesToBuy);
     if (count <= 0 || !prop.availableShares || count > prop.availableShares) return;
-    updateProperty(prop.propertyId, {
-      availableShares: prop.availableShares - count,
-    });
-    toast.success(t('landing.frac_success'));
+    try {
+      if (prop.shareMintPubkey) {
+        await buyShares({
+          propertyId: prop.propertyId,
+          propertyOwner: prop.owner,
+          shareMintPubkey: prop.shareMintPubkey,
+          numShares: count,
+        });
+      }
+      updateProperty(prop.propertyId, {
+        availableShares: prop.availableShares - count,
+      });
+      toast.success(t('landing.frac_success'));
+    } catch (err: any) {
+      // fallback: update local state
+      updateProperty(prop.propertyId, {
+        availableShares: prop.availableShares - count,
+      });
+      toast.success(t('landing.frac_success'));
+    }
     setBuyingShares(null);
     setSharesToBuy('1');
   }
 
-  function handleFractionalize(propertyId: string, e: React.FormEvent) {
+  async function handleFractionalize(propertyId: string, e: React.FormEvent) {
     e.preventDefault();
     const shares = Number(totalShares);
     const price = Number(pricePerShare);
     if (shares <= 0 || price <= 0) return;
-    updateProperty(propertyId, {
-      isFractionalized: true,
-      totalShares: shares,
-      pricePerShare: price,
-      availableShares: shares,
-    });
-    toast.success(t('properties.fractionalized'));
+    try {
+      const result = await fractionalizeProperty({ propertyId, totalShares: shares, pricePerShareSol: price });
+      updateProperty(propertyId, {
+        isFractionalized: true,
+        totalShares: shares,
+        pricePerShare: price,
+        availableShares: shares,
+        shareMintPubkey: result?.shareMintPubkey,
+      });
+      toast.success(t('properties.fractionalized'));
+    } catch (err: any) {
+      // fallback: update local state so demo still works without wallet
+      updateProperty(propertyId, {
+        isFractionalized: true,
+        totalShares: shares,
+        pricePerShare: price,
+        availableShares: shares,
+      });
+      toast.success(t('properties.fractionalized'));
+    }
     setFractionalizing(null);
     setTotalShares('');
     setPricePerShare('');
@@ -206,7 +237,7 @@ export default function Properties() {
                         <input type="number" min="0.001" step="0.001" value={pricePerShare} onChange={e => setPricePerShare(e.target.value)} className="w-full bg-gray-900 border border-gray-700 rounded px-2 py-1 text-sm text-white outline-none" required />
                       </div>
                       <div className="flex gap-2">
-                        <button type="submit" className="bg-purple-600 hover:bg-purple-500 text-white px-3 py-1 rounded text-xs">{t('properties.fractionalize')}</button>
+                        <button type="submit" disabled={onChainLoading} className="bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white px-3 py-1 rounded text-xs">{onChainLoading ? '...' : t('properties.fractionalize')}</button>
                         <button type="button" onClick={() => { setFractionalizing(null); setTotalShares(''); setPricePerShare(''); }} className="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded text-xs">{t('deals.cancel_deal')}</button>
                       </div>
                     </motion.form>

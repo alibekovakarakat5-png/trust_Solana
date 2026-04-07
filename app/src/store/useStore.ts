@@ -21,6 +21,7 @@ interface Property {
   totalShares?: number;
   pricePerShare?: number;
   availableShares?: number;
+  shareMintPubkey?: string;
 }
 
 interface Deal {
