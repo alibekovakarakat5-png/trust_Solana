@@ -161,6 +161,18 @@ export const DEMO_PROPERTIES = [
 ];
 
 export const DEMO_DEALS = [
+  // 🚨 FRAUD DEMO — оплачен эскроу, ждёт подтверждения (нажать Confirm → ИИ заблокирует)
+  {
+    dealId: 'deal_fraud_demo',
+    propertyId: 'prop_almaty_003',
+    seller: WALLETS.fraudSeller,
+    buyer: WALLETS.buyer3,
+    price: 59_500_000_000,
+    status: 'funded',
+    aiRiskScore: 0,
+    aiFlags: [],
+    createdAt: Date.now() - 900000,
+  },
   // НОВАЯ — только что создана, ждёт пополнения эскроу
   {
     dealId: 'deal_006_new',
@@ -237,6 +249,6 @@ export const DEMO_DEALS = [
 
 export const DEMO_STATS = {
   totalProperties: 7,
-  totalDeals: 6,
+  totalDeals: 7,
   totalFraudBlocked: 2,
 };

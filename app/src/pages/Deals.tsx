@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { motion } from 'framer-motion';
-import { FileText, Shield, Loader2, ArrowRight, ExternalLink, Wallet, CheckCheck, Zap, XCircle } from 'lucide-react';
+import { FileText, Shield, Loader2, ArrowRight, ExternalLink, Wallet, CheckCheck, Zap, XCircle, AlertOctagon } from 'lucide-react';
 import { api } from '../lib/api';
 import { useStore } from '../store/useStore';
 import { useTxStore } from '../store/useTxStore';
@@ -263,8 +263,16 @@ export default function Deals() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
-              className="bg-gray-900 border border-gray-800 rounded-xl p-4"
+              className={`bg-gray-900 border rounded-xl p-4 ${deal.dealId === 'deal_fraud_demo' && deal.status === 'funded' ? 'border-red-500/60' : 'border-gray-800'}`}
             >
+              {deal.dealId === 'deal_fraud_demo' && deal.status === 'funded' && (
+                <div className="flex items-center gap-2 mb-3 px-3 py-2 bg-red-500/10 border border-red-500/30 rounded-lg">
+                  <AlertOctagon className="w-4 h-4 text-red-400 shrink-0" />
+                  <span className="text-xs text-red-300 font-medium">
+                    ⚡ Fraud Demo — нажмите <strong>Confirm Deal</strong>, чтобы ИИ заблокировал мошенническую сделку в реальном времени
+                  </span>
+                </div>
+              )}
               <DealPipeline status={deal.status} />
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
@@ -342,7 +350,7 @@ export default function Deals() {
                     <button
                       onClick={() => handleConfirmDeal(deal.dealId)}
                       disabled={processing === deal.dealId}
-                      className="bg-primary-600 hover:bg-primary-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2"
+                      className={`disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 ${deal.dealId === 'deal_fraud_demo' ? 'bg-red-600 hover:bg-red-500' : 'bg-primary-600 hover:bg-primary-700'}`}
                     >
                       {processing === deal.dealId ? <Loader2 className="w-4 h-4 animate-spin" /> : <Shield className="w-4 h-4" />}
                       {processing === deal.dealId ? t('deals.checking') : t('deals.confirm_deal')}
