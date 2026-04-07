@@ -93,7 +93,7 @@ export default function Landing() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white overflow-hidden">
+    <div className="min-h-screen bg-gray-950 text-white overflow-hidden" style={{ background: 'linear-gradient(180deg, #0f0c1a 0%, #030712 18%, #030712 100%)' }}>
 
       {/* ── Navbar ── */}
       <div className="flex justify-between items-center max-w-6xl mx-auto px-4 pt-4 pb-2">
@@ -134,8 +134,9 @@ export default function Landing() {
 
       {/* ── HERO ── */}
       <section className="relative pt-6 pb-12 px-4">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary-900/40 via-gray-950 to-gray-950" />
-        <div className="absolute top-10 left-1/4 w-[500px] h-[500px] bg-primary-500/8 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_0%,_var(--tw-gradient-stops))] from-primary-900/30 via-transparent to-transparent" />
+        <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-primary-950/20 to-transparent pointer-events-none" />
+        <div className="absolute top-10 left-1/4 w-[600px] h-[600px] bg-primary-500/6 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative max-w-5xl mx-auto">
           {/* Centered text block */}
