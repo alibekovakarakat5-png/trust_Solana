@@ -387,6 +387,13 @@ export default function Landing() {
                 <div className="text-[10px] text-gray-500">{t('landing.ai_approve_rule')}</div>
                 <div className="text-[10px] text-gray-500">{t('landing.ai_block_rule')}</div>
               </div>
+
+              {/* Strong on-chain claim */}
+              <div className="mt-3 p-3 rounded-lg bg-purple-500/5 border border-purple-500/20">
+                <p className="text-[11px] text-purple-300 leading-relaxed">
+                  🔒 {t('landing.ai_onchain_claim')}
+                </p>
+              </div>
             </motion.div>
 
             {/* Solana Card */}
@@ -625,6 +632,83 @@ export default function Landing() {
                   )}
                 </div>
               )}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── RWA EXPANSION LAYER ── */}
+      <section className="py-16 px-4">
+        <div className="max-w-5xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-gray-900/60 border border-gray-700 rounded-2xl p-8"
+          >
+            {/* Header */}
+            <div className="flex flex-wrap items-center gap-3 mb-2">
+              <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 uppercase tracking-wider">
+                {t('landing.rwa_badge')}
+              </span>
+              <h2 className="text-2xl font-bold">{t('landing.rwa_title')}</h2>
+            </div>
+            <p className="text-sm text-gray-400 mb-8 max-w-2xl">{t('landing.rwa_subtitle')}</p>
+
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              {/* Fractional Ownership */}
+              <div className="bg-gray-950 border border-indigo-500/20 rounded-xl p-5">
+                <div className="w-10 h-10 rounded-lg bg-indigo-500/15 flex items-center justify-center mb-3">
+                  <Database className="w-5 h-5 text-indigo-400" />
+                </div>
+                <h3 className="font-semibold mb-2 text-sm">Fractional Ownership</h3>
+                <p className="text-xs text-gray-500 leading-relaxed mb-3">
+                  {t('landing.rwa_point1')}
+                </p>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 rounded-full bg-green-400" />
+                  <span className="text-[10px] text-green-400 font-mono">on-chain ✓</span>
+                </div>
+              </div>
+
+              {/* Share tokens */}
+              <div className="bg-gray-950 border border-indigo-500/20 rounded-xl p-5">
+                <div className="w-10 h-10 rounded-lg bg-indigo-500/15 flex items-center justify-center mb-3">
+                  <Zap className="w-5 h-5 text-indigo-400" />
+                </div>
+                <h3 className="font-semibold mb-2 text-sm">SPL Share Tokens</h3>
+                <p className="text-xs text-gray-500 leading-relaxed mb-3">
+                  {t('landing.rwa_point2')}
+                </p>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 rounded-full bg-green-400" />
+                  <span className="text-[10px] text-green-400 font-mono">contract ready ✓</span>
+                </div>
+              </div>
+
+              {/* Phase 2 */}
+              <div className="bg-gray-950 border border-yellow-500/20 rounded-xl p-5">
+                <div className="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center mb-3">
+                  <TrendingUp className="w-5 h-5 text-yellow-400" />
+                </div>
+                <h3 className="font-semibold mb-2 text-sm">{t('landing.rwa_phase')}</h3>
+                <p className="text-xs text-gray-500 leading-relaxed mb-3">
+                  {t('landing.rwa_phase_desc')}
+                </p>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />
+                  <span className="text-[10px] text-yellow-400 font-mono">UI in Phase 2</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom note */}
+            <div className="flex items-start gap-3 p-4 bg-indigo-500/5 border border-indigo-500/15 rounded-xl">
+              <Shield className="w-4 h-4 text-indigo-400 mt-0.5 shrink-0" />
+              <p className="text-xs text-gray-400 leading-relaxed">
+                <span className="text-white font-medium">Core product today:</span> Tokenize → AI Verify → Secure Deal — fully live on Solana Devnet.{' '}
+                <span className="text-indigo-300">RWA Expansion Layer</span> smart contract is deployed and audited; the UI module ships in Phase 2.
+              </p>
             </div>
           </motion.div>
         </div>

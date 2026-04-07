@@ -92,7 +92,16 @@
     "try_title": "Try It Yourself",
     "try_desc": "Everything is live on Solana Devnet. Verify it now.",
     "proof_contract": "Contract",
-    "proof_ai": "AI Provider"
+    "proof_ai": "AI Provider",
+    "ai_onchain_claim": "AI verdict is recorded on-chain. Blocked deals cannot be executed — enforced by the smart contract, not the UI.",
+    "rwa_badge": "Extended Capability",
+    "rwa_title": "RWA Expansion Layer",
+    "rwa_subtitle": "The core fraud-protection product is live. Below is the on-chain foundation for what comes next.",
+    "rwa_point1": "On-chain fractional ownership module implemented",
+    "rwa_point2": "Share tokens (SPL), buy_shares & rental distribution — all in the smart contract",
+    "rwa_point3": "Smart contract ready — UI rollout in Phase 2",
+    "rwa_phase": "Phase 2 Roadmap",
+    "rwa_phase_desc": "Full marketplace, mobile app, cadastral registry integration"
   },
   "dashboard": {
     "title": "Platform Overview",
