@@ -338,7 +338,13 @@
     "faq3_q": "Who verifies properties?",
     "faq3_a": "AlemLLM — Kazakhstan's national AI. Checks duplicates, price anomalies, seller history, documents, address and resale speed.",
     "faq4_q": "What happens if AI blocks a deal?",
-    "faq4_a": "Funds from escrow are automatically returned to the buyer. The verdict is recorded on-chain and cannot be changed."
+    "faq4_a": "Funds from escrow are automatically returned to the buyer. The verdict is recorded on-chain and cannot be changed.",
+    "judge_title": "Judge Quick-Verify — 5 min",
+    "judge_item1": "Connect Phantom wallet → switch to Devnet",
+    "judge_item2": "Click Explorer link → verify contract is deployed",
+    "judge_item3": "Happy path: open Almaty apt → Buy → watch deal reach Completed",
+    "judge_item4": "Fraud path: open Shymkent apt → AI Score 22 → deal is Blocked",
+    "judge_item5": "Dashboard → see 2 blocked frauds in AI Fraud Analytics"
   },
   "profile": {
     "my_profile": "My Profile",

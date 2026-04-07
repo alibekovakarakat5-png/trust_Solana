@@ -90,11 +90,11 @@ export default function Guide() {
   ];
 
   const judgeChecklist = [
-    { emoji: '👛', text: 'Connect Phantom wallet → switch to Devnet' },
-    { emoji: '🔗', text: 'Click Explorer link → verify contract is deployed' },
-    { emoji: '✅', text: 'Happy path: open Almaty apt → Buy → watch deal reach Completed' },
-    { emoji: '🚨', text: 'Fraud path: open Shymkent apt → AI Score 22 → deal is Blocked' },
-    { emoji: '📊', text: 'Dashboard → see 2 blocked frauds in AI Fraud Analytics' },
+    { emoji: '👛', text: t('guide.judge_item1') },
+    { emoji: '🔗', text: t('guide.judge_item2') },
+    { emoji: '✅', text: t('guide.judge_item3') },
+    { emoji: '🚨', text: t('guide.judge_item4') },
+    { emoji: '📊', text: t('guide.judge_item5') },
   ];
 
   return (
@@ -118,7 +118,7 @@ export default function Guide() {
       >
         <div className="flex items-center gap-2 mb-4">
           <CheckCircle className="w-5 h-5 text-primary-400" />
-          <h2 className="text-lg font-bold text-primary-300">Judge Quick-Verify — 5 min</h2>
+          <h2 className="text-lg font-bold text-primary-300">{t('guide.judge_title')}</h2>
           <span className="ml-auto text-xs text-gray-500 font-mono bg-gray-900 px-2 py-1 rounded">Devnet</span>
         </div>
         <div className="space-y-2 mb-4">
